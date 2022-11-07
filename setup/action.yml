@@ -4,7 +4,7 @@ inputs:
   nodeVersion:
     description: 'NodeJS Version to use'
     required: true
-    default: ".nvmrc"
+    default: 16.17.1
   workingDirectory:
     description: 'Working directory'
     required: false
