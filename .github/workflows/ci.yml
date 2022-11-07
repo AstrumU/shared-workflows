@@ -126,11 +126,9 @@ jobs:
 
       - name: Depchecker
         run: pnpm run depchecker
-        with:
-          nodeOptions: ${{inputs.nodeOptions}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          nodeOptions: ${{inputs.nodeOptions}}
 
   lint:
     runs-on: self-hosted
@@ -160,8 +158,6 @@ jobs:
 
       - name: Lint
         run: pnpm run lint
-        with:
-          nodeOptions: ${{inputs.nodeOptions}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          nodeOptions: ${{inputs.nodeOptions}}
