@@ -73,7 +73,7 @@ jobs:
         run: pnpm run build:ts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          nodeOptions: ${{ inputs.nodeOptions }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - uses: actions/cache@v3
         id: build-cache
@@ -129,7 +129,7 @@ jobs:
         run: pnpm run depchecker
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          nodeOptions: ${{inputs.nodeOptions}}
+          NODE_OPTIONS: ${{inputs.nodeOptions}}
 
   lint:
     runs-on: self-hosted
@@ -161,4 +161,4 @@ jobs:
         run: pnpm run lint
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          nodeOptions: ${{inputs.nodeOptions}}
+          NODE_OPTIONS: ${{inputs.nodeOptions}}

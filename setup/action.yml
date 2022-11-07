@@ -21,10 +21,10 @@ inputs:
     description: 'PNPM/YARN cache version'
     required: false
     default: v11
-  nodeOptions:
-    description: 'Options for Node'
-    required: false
-    default: --max_old_space_size=8192
+  # nodeOptions:
+  #   description: 'Options for Node'
+  #   required: false
+  #   default: --max_old_space_size=8192
 
 runs:
   using: composite
@@ -74,8 +74,8 @@ runs:
       shell: bash
       if: ${{ inputs.packageManager == 'yarn' && steps.yarn_cache.outputs.cache-hit != 'true' }}
       run: yarn install --frozen-lockfile --check-files --ignore-scripts
-      env:
-        nodeOptions: ${{ inputs.nodeOptions }}
+      # env:
+      #   nodeOptions: ${{ inputs.nodeOptions }}
       # working-directory: ${{ inputs.workingDirectory }}
       # env:
       #     NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
@@ -84,8 +84,8 @@ runs:
       shell: bash
       if: ${{ inputs.packageManager == 'pnpm' && steps.pnpm_cache.outputs.cache-hit != 'true' }}
       run: pnpm install --frozen-lockfile
-      env:
-        nodeOptions: ${{ inputs.nodeOptions }}
+      # env:
+      #   nodeOptions: ${{ inputs.nodeOptions }}
       # working-directory: ${{ inputs.workingDirectory }}
       # env:
       #     NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
