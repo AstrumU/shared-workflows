@@ -74,7 +74,7 @@ runs:
             packages/**/node_modules
           key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('yarn.lock') }}-test
           restore-keys: |
-            ${{ runner.os }}-${{ einputs.cacheVersion }}-${{ hashFiles('yarn.lock') }}-test
+            ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('yarn.lock') }}-test
 
     - name: yarn install
       shell: bash
