@@ -5,10 +5,6 @@ inputs:
     description: 'NodeJS Version to use'
     required: true
     default: 16.17.1
-  # workingDirectory:
-  #   description: 'Working directory'
-  #   required: false
-  #   default: './'
   packageManager:
     description: 'Package Manager'
     required: false
@@ -21,10 +17,6 @@ inputs:
     description: 'PNPM/YARN cache version'
     required: false
     default: v11
-  # nodeOptions:
-  #   description: 'Options for Node'
-  #   required: false
-  #   default: --max_old_space_size=8192
 
 runs:
   using: composite
@@ -41,10 +33,6 @@ runs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.nodeVersion }}
-        # cache: ${{ inputs.packageManager }}
-        # cache-dependency-path: |
-        #   **/pnpm-lock.yaml
-        #   **/yarn.lock
 
     - name: Restore node_modules cache ${{ inputs.packageManager }}
       id: pnpm_cache
@@ -74,18 +62,8 @@ runs:
       shell: bash
       if: ${{ inputs.packageManager == 'yarn' && steps.yarn_cache.outputs.cache-hit != 'true' }}
       run: yarn install --frozen-lockfile --check-files --ignore-scripts
-      # env:
-      #   nodeOptions: ${{ inputs.nodeOptions }}
-      # working-directory: ${{ inputs.workingDirectory }}
-      # env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
     - name: pnpm install
       shell: bash
       if: ${{ inputs.packageManager == 'pnpm' && steps.pnpm_cache.outputs.cache-hit != 'true' }}
       run: pnpm install --frozen-lockfile
-      # env:
-      #   nodeOptions: ${{ inputs.nodeOptions }}
-      # working-directory: ${{ inputs.workingDirectory }}
-      # env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}

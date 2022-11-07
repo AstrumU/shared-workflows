@@ -27,8 +27,6 @@ on:
     secrets:
       natToken:
         required: true
-    # env:
-    #    NODE_OPTIONS: --max_old_space_size=8192
 
 jobs:
   dependencies:
@@ -47,7 +45,7 @@ jobs:
           pnpmVersion: ${{inputs.pnpmVersion}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
   build:
     runs-on: self-hosted
@@ -67,7 +65,7 @@ jobs:
           nodeOptions: ${{inputs.nodeOptions}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - name: Build
         run: pnpm run build:ts
@@ -98,13 +96,13 @@ jobs:
           pnpmVersion: ${{inputs.pnpmVersion}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - uses: ./.github/workflows/audit
         name: Auditing
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
   depchecker:
     runs-on: self-hosted
@@ -123,7 +121,7 @@ jobs:
           pnpmVersion: ${{inputs.pnpmVersion}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - name: Depchecker
         run: pnpm run depchecker
@@ -148,7 +146,7 @@ jobs:
           pnpmVersion: ${{inputs.pnpmVersion}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - uses: actions/cache@v3
         id: build-cache
