@@ -23,8 +23,8 @@ on:
     secrets:
       natToken:
         required: true
-    env:
-       NODE_OPTIONS: --max_old_space_size=8192
+    # env:
+    #    NODE_OPTIONS: --max_old_space_size=8192
 
 jobs:
   dependencies:
@@ -43,7 +43,7 @@ jobs:
           pnpmVersion: ${{inputs.pnpmVersion}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
 
   build:
     runs-on: self-hosted
@@ -62,7 +62,7 @@ jobs:
           pnpmVersion: ${{inputs.pnpmVersion}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
 
       - name: Build
         run: pnpm run build:ts
@@ -93,13 +93,13 @@ jobs:
           pnpmVersion: ${{inputs.pnpmVersion}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
 
       - uses: ./.github/workflows/audit
         name: Auditing
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
 
   depchecker:
     runs-on: self-hosted
@@ -118,13 +118,13 @@ jobs:
           pnpmVersion: ${{inputs.pnpmVersion}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
 
       - name: Depchecker
         run: pnpm run depchecker
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
 
   lint:
     runs-on: self-hosted
@@ -143,7 +143,7 @@ jobs:
           pnpmVersion: ${{inputs.pnpmVersion}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
 
       - uses: actions/cache@v3
         id: build-cache
@@ -156,4 +156,4 @@ jobs:
         run: pnpm run lint
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+          # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
