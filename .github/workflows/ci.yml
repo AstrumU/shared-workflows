@@ -67,8 +67,7 @@ jobs:
       - name: Build
         run: pnpm run build:ts
         env:
-          NPM_TOKEN: ${{ secrets.npmToken }}
-          GITHUB_TOKEN: ${{ secrets.githubToken }}
+          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
 
       - uses: actions/cache@v3
         id: build-cache
