@@ -73,8 +73,8 @@ runs:
          && steps.yarn_cache.outputs.cache-hit != 'true'
       run: yarn install --frozen-lockfile --check-files --ignore-scripts
       working-directory: ${{ inputs.workingDirectory }}
-      env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+      # env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
     - name: pnpm install
       shell: bash
@@ -83,5 +83,5 @@ runs:
          && steps.pnpm_cache.outputs.cache-hit != 'true'
       run: pnpm install --frozen-lockfile
       working-directory: ${{ inputs.workingDirectory }}
-      env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+      # env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
