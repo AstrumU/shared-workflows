@@ -74,7 +74,7 @@ runs:
       shell: bash
       if: ${{ inputs.packageManager == 'yarn' && steps.yarn_cache.outputs.cache-hit != 'true' }}
       run: yarn install --frozen-lockfile --check-files --ignore-scripts
-      with:
+      env:
         nodeOptions: ${{ inputs.nodeOptions }}
       # working-directory: ${{ inputs.workingDirectory }}
       # env:
@@ -84,7 +84,7 @@ runs:
       shell: bash
       if: ${{ inputs.packageManager == 'pnpm' && steps.pnpm_cache.outputs.cache-hit != 'true' }}
       run: pnpm install --frozen-lockfile
-      with:
+      env:
         nodeOptions: ${{ inputs.nodeOptions }}
       # working-directory: ${{ inputs.workingDirectory }}
       # env:
