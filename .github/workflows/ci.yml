@@ -73,6 +73,7 @@ jobs:
         run: pnpm run build:ts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          nodeOptions: ${{ inputs.nodeOptions }}
 
       - uses: actions/cache@v3
         id: build-cache
