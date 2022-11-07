@@ -2,7 +2,7 @@ on:
   workflow_call:
     inputs:
       nodeVersion:
-        required: false
+        required: true
         type: string
         default: ".nvmrc"
       name:
@@ -12,13 +12,19 @@ on:
         type: string
         required: false
         default: yarn
+      cacheVersion:
+        type: string
+        required: false
+        default: v11
+      pnpmVersion:
+        type: string
+        required: false
+        default: 7.13.3
     secrets:
       natToken:
         required: true
     env:
        NODE_OPTIONS: --max_old_space_size=8192
-       CACHE_VERSION: v11
-       PNPM_VERSION: 7.13.3
 
 jobs:
   dependencies:
@@ -33,6 +39,8 @@ jobs:
         with:
           nodeVersion: ${{inputs.nodeVersion}}
           packageManager: ${{inputs.packageManager}}
+          cacheVersion: ${{inputs.cacheVersion}}
+          pnpmVersion: ${{inputs.pnpmVersion}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
           NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
@@ -50,6 +58,8 @@ jobs:
         with:
           nodeVersion: ${{inputs.nodeVersion}}
           packageManager: ${{inputs.packageManager}}
+          cacheVersion: ${{inputs.cacheVersion}}
+          pnpmVersion: ${{inputs.pnpmVersion}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
           NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
@@ -79,6 +89,8 @@ jobs:
         with:
           nodeVersion: ${{inputs.nodeVersion}}
           packageManager: ${{inputs.packageManager}}
+          cacheVersion: ${{inputs.cacheVersion}}
+          pnpmVersion: ${{inputs.pnpmVersion}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
           NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
@@ -102,6 +114,8 @@ jobs:
         with:
           nodeVersion: ${{inputs.nodeVersion}}
           packageManager: ${{inputs.packageManager}}
+          cacheVersion: ${{inputs.cacheVersion}}
+          pnpmVersion: ${{inputs.pnpmVersion}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
           NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
@@ -125,6 +139,8 @@ jobs:
         with:
           nodeVersion: ${{inputs.nodeVersion}}
           packageManager: ${{inputs.packageManager}}
+          cacheVersion: ${{inputs.cacheVersion}}
+          pnpmVersion: ${{inputs.pnpmVersion}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
           NODE_OPTIONS: ${{ env.NODE_OPTIONS }}

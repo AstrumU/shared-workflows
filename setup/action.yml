@@ -4,7 +4,7 @@ inputs:
   nodeVersion:
     description: 'NodeJS Version to use'
     required: true
-    default: '18'
+    default: ".nvmrc"
   workingDirectory:
     description: 'Working directory'
     required: false
@@ -13,6 +13,14 @@ inputs:
     description: 'Package Manager'
     required: false
     default: yarn
+  pnpmVersion:
+    description: 'PNPM Manager version'
+    required: false
+    default: 7.13.3
+  cacheVersion:
+    description: 'PNPM/YARN cache version'
+    required: false
+    default: v11
 
 runs:
   using: composite
@@ -22,7 +30,7 @@ runs:
       if: inputs.packageManager == 'pnpm'
       uses: pnpm/action-setup@v2.2.4
       with:
-        version: 7.13.3
+        version: ${{ inputs.pnpmVersion }}
         run_install: false
 
     - name: setup node
@@ -42,9 +50,9 @@ runs:
           path: |
             node_modules
             packages/**/node_modules
-          key: ${{ runner.os }}-${{ env.CACHE_VERSION }}-${{ hashFiles('pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-${{ env.CACHE_VERSION }}-${{ hashFiles('pnpm-lock.yaml') }}-test
           restore-keys: |
-            ${{ runner.os }}-${{ env.CACHE_VERSION }}-${{ hashFiles('pnpm-lock.yaml') }}
+            ${{ runner.os }}-${{ env.CACHE_VERSION }}-${{ hashFiles('pnpm-lock.yaml') }}-test
 
     - name: Restore node_modules cache ${{ inputs.packageManager }}
       id: yarn_cache
@@ -54,9 +62,9 @@ runs:
           path: |
             node_modules
             packages/**/node_modules
-          key: ${{ runner.os }}-${{ env.CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}
+          key: ${{ runner.os }}-${{ env.CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}-test
           restore-keys: |
-            ${{ runner.os }}-${{ env.CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}
+            ${{ runner.os }}-${{ env.CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}-test
 
     - name: yarn install
       shell: bash
