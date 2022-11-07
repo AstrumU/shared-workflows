@@ -20,6 +20,10 @@ on:
         type: string
         required: false
         default: 7.13.3
+      nodeOptions:
+        type: string
+        required: false
+        default: --max_old_space_size=8192 
     secrets:
       natToken:
         required: true
@@ -60,6 +64,7 @@ jobs:
           packageManager: ${{inputs.packageManager}}
           cacheVersion: ${{inputs.cacheVersion}}
           pnpmVersion: ${{inputs.pnpmVersion}}
+          nodeOptions: ${{inputs.nodeOptions}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
           # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
@@ -121,6 +126,8 @@ jobs:
 
       - name: Depchecker
         run: pnpm run depchecker
+        with:
+          nodeOptions: ${{inputs.nodeOptions}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
           # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
@@ -153,6 +160,8 @@ jobs:
 
       - name: Lint
         run: pnpm run lint
+        with:
+          nodeOptions: ${{inputs.nodeOptions}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
           # NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
