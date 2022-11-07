@@ -54,16 +54,6 @@ runs:
           restore-keys: |
             ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('pnpm-lock.yaml') }}-test
 
-    - name: pnpm install
-      shell: bash
-      if: |
-        inputs.packageManager == 'yarn'
-         && steps.pnpm_cache.outputs.cache-hit != 'true'
-      run: pnpm install --frozen-lockfile
-      # working-directory: ${{ inputs.workingDirectory }}
-      # env:
-      #     NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-
     - name: Restore node_modules cache ${{ inputs.packageManager }}
       id: yarn_cache
       if: inputs.packageManager == 'yarn'
@@ -82,6 +72,16 @@ runs:
         inputs.packageManager == 'yarn'
          && steps.yarn_cache.outputs.cache-hit != 'true'
       run: yarn install --frozen-lockfile --check-files --ignore-scripts
+      # working-directory: ${{ inputs.workingDirectory }}
+      # env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+
+    - name: pnpm install
+      shell: bash
+      if: |
+        inputs.packageManager == 'yarn'
+         && steps.pnpm_cache.outputs.cache-hit != 'true'
+      run: pnpm install --frozen-lockfile
       # working-directory: ${{ inputs.workingDirectory }}
       # env:
       #     NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
