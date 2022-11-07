@@ -1,0 +1,143 @@
+on:
+  workflow_call:
+    inputs:
+      nodeVersion:
+        required: false
+        type: string
+        default: ".nvmrc"
+      name:
+        required: false
+        type: string
+      packageManager:
+        type: string
+        required: false
+        default: yarn
+    secrets:
+      natToken:
+        required: true
+    env:
+       NODE_OPTIONS: --max_old_space_size=8192
+       CACHE_VERSION: v11
+       PNPM_VERSION: 7.13.3
+
+jobs:
+  dependencies:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout
+
+      - uses: AstrumU/shared-config/setup@feature/KAN-206
+        name: setup env
+        with:
+          nodeVersion: ${{inputs.nodeVersion}}
+          packageManager: ${{inputs.packageManager}}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+
+  build:
+    runs-on: self-hosted
+    needs: dependencies
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout
+
+      - uses: AstrumU/shared-config/setup@feature/KAN-206
+        name: setup env
+        with:
+          nodeVersion: ${{inputs.nodeVersion}}
+          packageManager: ${{inputs.packageManager}}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+
+      - name: Build
+        run: pnpm run build:ts
+        env:
+          NPM_TOKEN: ${{ secrets.npmToken }}
+          GITHUB_TOKEN: ${{ secrets.githubToken }}
+
+      - uses: actions/cache@v3
+        id: build-cache
+        name: Save build cache
+        with:
+          path: ./*
+          key: ${{ github.sha }}
+
+  audit:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout
+
+      - uses: AstrumU/shared-config/setup@feature/KAN-206
+        name: setup env
+        with:
+          nodeVersion: ${{inputs.nodeVersion}}
+          packageManager: ${{inputs.packageManager}}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+
+      - uses: ./.github/workflows/audit
+        name: Auditing
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+
+  depchecker:
+    runs-on: self-hosted
+    needs: dependencies
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout
+
+      - uses: AstrumU/shared-config/setup@feature/KAN-206
+        name: setup env
+        with:
+          nodeVersion: ${{inputs.nodeVersion}}
+          packageManager: ${{inputs.packageManager}}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+
+      - name: Depchecker
+        run: pnpm run depchecker
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+
+  lint:
+    runs-on: self-hosted
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout
+
+      - uses: AstrumU/shared-config/setup@feature/KAN-206
+        name: setup env
+        with:
+          nodeVersion: ${{inputs.nodeVersion}}
+          packageManager: ${{inputs.packageManager}}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}
+
+      - uses: actions/cache@v3
+        id: build-cache
+        name: Restore build cache
+        with:
+          path: ./*
+          key: ${{ github.sha }}
+
+      - name: Lint
+        run: pnpm run lint
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_OPTIONS: ${{ env.NODE_OPTIONS }}

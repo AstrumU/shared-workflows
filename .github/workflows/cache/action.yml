@@ -1,0 +1,34 @@
+name: 'Restore cache'
+description: 'Shared configuration for restoring cache'
+inputs:
+  packageManager:
+    description: 'Package Manager'
+    required: false
+    default: yarn
+
+runs:
+  using: composite
+  steps:
+    - name: Restore node_modules cache ${{ inputs.packageManager }}
+      id: pnpm_cache
+      if: inputs.packageManager == 'pnpm'
+      uses: actions/cache@v3
+      with:
+          path: |
+            node_modules
+            packages/**/node_modules
+          key: ${{ runner.os }}-${{ env.CACHE_VERSION }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.CACHE_VERSION }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+    - name: Restore node_modules cache ${{ inputs.packageManager }}
+      id: yarn_cache
+      if: inputs.packageManager == 'yarn'
+      uses: actions/cache@v3
+      with:
+          path: |
+            node_modules
+            packages/**/node_modules
+          key: ${{ runner.os }}-${{ env.CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}
