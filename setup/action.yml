@@ -4,7 +4,7 @@ inputs:
   nodeVersion:
     description: 'NodeJS Version to use'
     required: true
-    default: 16.17.1
+    default: ".nvmrc" # 16.17.1
   packageManager:
     description: 'Package Manager'
     required: false
@@ -32,7 +32,8 @@ runs:
     - name: setup node
       uses: actions/setup-node@v3
       with:
-        node-version: ${{ inputs.nodeVersion }}
+       node-version-file: ".nvmrc"
+        # node-version: ${{ inputs.nodeVersion }}
 
     - name: Restore node_modules cache ${{ inputs.packageManager }}
       id: pnpm_cache
