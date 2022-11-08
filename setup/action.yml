@@ -33,7 +33,12 @@ runs:
       uses: actions/setup-node@v3
       with:
        node-version-file: ${{ inputs.nodeVersion }}
-        # node-version: ${{ inputs.nodeVersion }}
+       
+    - name: Setup ${{ inputs.packageManager }}
+      id: yarn_setup
+      if: inputs.packageManager == 'yarn'
+      shell: bash 
+      run: npm i -g yarn 
 
     - name: Restore node_modules cache ${{ inputs.packageManager }}
       id: pnpm_cache
