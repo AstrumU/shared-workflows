@@ -31,7 +31,7 @@ on:
 jobs:
   test-unit-server:
     runs-on: self-hosted
-    needs: build
+    # needs: build
 
     steps:
       - uses: actions/checkout@v3
@@ -65,7 +65,7 @@ jobs:
 
   test-unit-client:
     runs-on: self-hosted
-    needs: build
+    # needs: build
 
     steps:
       - uses: actions/checkout@v3
@@ -99,7 +99,7 @@ jobs:
 
   test-int-client:
     runs-on: self-hosted
-    needs: build
+    # needs: build
     strategy:
       fail-fast: false
       matrix:
