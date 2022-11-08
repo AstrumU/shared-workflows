@@ -50,6 +50,8 @@ jobs:
   build:
     runs-on: self-hosted
     needs: dependencies
+    outputs:
+      builded: ${{ steps.build.outputs.builded }}
 
     steps:
       - uses: actions/checkout@v3
@@ -68,6 +70,7 @@ jobs:
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - name: Build
+        id: build
         run: pnpm run build:ts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
