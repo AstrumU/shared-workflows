@@ -109,7 +109,6 @@ jobs:
 
   depchecker:
     runs-on: self-hosted
-    needs: dependencies
 
     steps:
       - uses: actions/checkout@v3
@@ -134,7 +133,6 @@ jobs:
 
   lint:
     runs-on: self-hosted
-    needs: build
 
     steps:
       - uses: actions/checkout@v3
