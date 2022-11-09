@@ -52,10 +52,17 @@ jobs:
         id: build-cache
         name: Restore build cache
         with:
-          path: |
-            packages/**/dist
-            packages/**/tsconfig.tsbuildinfo
+          path: ./*
           key: ${{ github.sha }}
+
+      # - uses: actions/cache@v3
+      #   id: build-cache
+      #   name: Restore build cache
+      #   with:
+      #     path: |
+      #       packages/**/dist
+      #       packages/**/tsconfig.tsbuildinfo
+      #     key: ${{ github.sha }}
 
       - name: Unit tests server
         run: yarn test:unit:server --ci
@@ -86,10 +93,17 @@ jobs:
         id: build-cache
         name: Restore build cache
         with:
-          path: |
-            packages/**/dist
-            packages/**/tsconfig.tsbuildinfo
+          path: ./*
           key: ${{ github.sha }}
+
+      # - uses: actions/cache@v3
+      #   id: build-cache
+      #   name: Restore build cache
+      #   with:
+      #     path: |
+      #       packages/**/dist
+      #       packages/**/tsconfig.tsbuildinfo
+      #     key: ${{ github.sha }}
 
       - name: Unit tests client
         run: yarn test:unit:client --ci
@@ -132,14 +146,21 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
-      - name: Restore build cache
-        uses: actions/cache@v3
+      - uses: actions/cache@v3
         id: build-cache
+        name: Restore build cache
         with:
-          path: |
-            packages/**/dist
-            packages/**/tsconfig.tsbuildinfo
-          key: ${{ github.sha }}
+          path: ./*
+          key: ${{ github.sha }} 
+
+      # - name: Restore build cache
+      #   uses: actions/cache@v3
+      #   id: build-cache
+      #   with:
+      #     path: |
+      #       packages/**/dist
+      #       packages/**/tsconfig.tsbuildinfo
+      #     key: ${{ github.sha }}
 
       - name: Install & verify Cypress
         run: |
