@@ -1,0 +1,85 @@
+on:
+  workflow_call:
+    inputs:
+      nodeVersion:
+        required: true
+        type: string
+        default: ".nvmrc"
+      name:
+        required: false
+        type: string
+      packageManager:
+        type: string
+        required: false
+        default: yarn
+      cacheVersion:
+        type: string
+        required: false
+        default: v11
+      pnpmVersion:
+        type: string
+        required: false
+        default: 7.13.3
+      nodeOptions:
+        type: string
+        required: false
+        default: --max_old_space_size=8192 
+    secrets:
+      natToken:
+        required: true
+
+jobs:
+  dependencies:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout
+
+      - uses: AstrumU/shared-config/setup@feature/KAN-206
+        name: setup env
+        with:
+          nodeVersion: ${{inputs.nodeVersion}}
+          packageManager: ${{inputs.packageManager}}
+          cacheVersion: ${{inputs.cacheVersion}}
+          pnpmVersion: ${{inputs.pnpmVersion}}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+
+  build:
+    runs-on: self-hosted
+    needs: dependencies
+    outputs:
+      builded: ${{ steps.build.outputs.builded }}
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout
+
+      - uses: AstrumU/shared-config/setup@feature/KAN-206
+        name: setup env
+        with:
+          nodeVersion: ${{inputs.nodeVersion}}
+          packageManager: ${{inputs.packageManager}}
+          cacheVersion: ${{inputs.cacheVersion}}
+          pnpmVersion: ${{inputs.pnpmVersion}}
+          nodeOptions: ${{inputs.nodeOptions}}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+
+      - name: Build
+        id: build
+        run: ${{ inputs.packageManager }} build:ts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+
+      - uses: actions/cache@v3
+        id: build-cache
+        name: Save build cache
+        with:
+          path: ./*
+          key: ${{ github.sha }}
+          
