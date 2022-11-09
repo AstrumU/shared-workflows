@@ -71,7 +71,7 @@ jobs:
 
       - name: Build
         id: build
-        run: pnpm run build:ts
+        run: ${{ inputs.packageManager }} build:ts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
