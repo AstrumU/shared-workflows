@@ -127,7 +127,7 @@ jobs:
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - name: Depchecker
-        run: pnpm run depchecker
+        run: ${{ inputs.packageManager }} depchecker
         env:
           NODE_AUTH_TOKEN: ${{ secrets.natToken }}
           NODE_OPTIONS: ${{inputs.nodeOptions}}
