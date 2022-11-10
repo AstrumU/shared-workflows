@@ -48,9 +48,9 @@ runs:
           path: |
             node_modules
             packages/**/node_modules
-          key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('pnpm-lock.yaml') }}-test
+          key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: |
-            ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('pnpm-lock.yaml') }}-test
+            ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('pnpm-lock.yaml') }}
 
     - name: Restore node_modules cache ${{ inputs.packageManager }}
       id: yarn_cache
@@ -60,9 +60,9 @@ runs:
           path: |
             node_modules
             packages/**/node_modules
-          key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('yarn.lock') }}-test
+          key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('yarn.lock') }}-test
+            ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('yarn.lock') }}
 
     - name: yarn install
       shell: bash
