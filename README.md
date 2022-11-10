@@ -1,1 +1,1 @@
-# shared-config
+# shared-workflows

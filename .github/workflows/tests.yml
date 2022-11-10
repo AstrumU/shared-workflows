@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v3
         name: Checkout
 
-      - uses: AstrumU/shared-config/setup@feature/KAN-206
+      - uses: AstrumU/shared-workflows/setup@feature/KAN-206
         name: setup env
         with:
           nodeVersion: ${{inputs.nodeVersion}}
@@ -67,7 +67,7 @@ jobs:
       - uses: actions/checkout@v3
         name: Checkout
 
-      - uses: AstrumU/shared-config/setup@feature/KAN-206
+      - uses: AstrumU/shared-workflows/setup@feature/KAN-206
         name: setup env
         with:
           nodeVersion: ${{inputs.nodeVersion}}
@@ -114,7 +114,7 @@ jobs:
           sudo apt update
           sudo apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xvfb
 
-      - uses: AstrumU/shared-config/setup@feature/KAN-206
+      - uses: AstrumU/shared-workflows/setup@feature/KAN-206
         name: setup env
         with:
           nodeVersion: ${{inputs.nodeVersion}}
