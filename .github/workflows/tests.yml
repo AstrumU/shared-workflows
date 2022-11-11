@@ -33,9 +33,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - uses: actions/checkout@v3
-        name: Checkout
-
       - uses: AstrumU/shared-workflows/setup@feature/KAN-206
         name: setup env
         with:
@@ -66,9 +63,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - uses: actions/checkout@v3
-        name: Checkout
-
       - uses: AstrumU/shared-workflows/setup@feature/KAN-206
         name: setup env
         with:
@@ -107,9 +101,6 @@ jobs:
     name: test-int-client-${{ matrix.client }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
       - uses: AstrumU/shared-workflows/setup@feature/KAN-206
         name: setup env
         with:

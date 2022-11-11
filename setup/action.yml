@@ -21,6 +21,12 @@ inputs:
 runs:
   using: composite
   steps:
+    - uses: actions/checkout@v3
+      name: Checkout
+      with:
+          fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_branch }}
+
     - name: Setup ${{ inputs.packageManager }}
       id: pnpm_setup
       if: inputs.packageManager == 'pnpm'
