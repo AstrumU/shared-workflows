@@ -2,7 +2,7 @@ on:
   workflow_call:
     inputs:
       nodeVersion:
-        required: true
+        required: false
         type: string
         default: ".nvmrc"
       name:
@@ -14,8 +14,8 @@ on:
         default: yarn
       cacheVersion:
         type: string
-        required: false
-        default: v11
+        required: true
+        default: v1
       pnpmVersion:
         type: string
         required: false
@@ -25,7 +25,7 @@ on:
         required: false
         default: --max_old_space_size=8192 
     secrets:
-      natToken:
+      NODE_AUTH_TOKEN:
         required: true
 
 jobs:
@@ -39,19 +39,17 @@ jobs:
       - uses: AstrumU/shared-workflows/setup@feature/KAN-206
         name: setup env
         with:
-          nodeVersion: ${{inputs.nodeVersion}}
-          packageManager: ${{inputs.packageManager}}
-          cacheVersion: ${{inputs.cacheVersion}}
-          pnpmVersion: ${{inputs.pnpmVersion}}
+          nodeVersion: ${{ inputs.nodeVersion }}
+          packageManager: ${{ inputs.packageManager }}
+          cacheVersion: ${{ inputs.cacheVersion }}
+          pnpmVersion: ${{ inputs.pnpmVersion }}
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
   build:
     runs-on: self-hosted
     needs: dependencies
-    outputs:
-      builded: ${{ steps.build.outputs.builded }}
 
     steps:
       - uses: actions/checkout@v3
@@ -60,25 +58,27 @@ jobs:
       - uses: AstrumU/shared-workflows/setup@feature/KAN-206
         name: setup env
         with:
-          nodeVersion: ${{inputs.nodeVersion}}
-          packageManager: ${{inputs.packageManager}}
-          cacheVersion: ${{inputs.cacheVersion}}
-          pnpmVersion: ${{inputs.pnpmVersion}}
+          nodeVersion: ${{ inputs.nodeVersion }}
+          packageManager: ${{ inputs.packageManager }}
+          cacheVersion: ${{ inputs.cacheVersion }}
+          pnpmVersion: ${{ inputs.pnpmVersion }}
           nodeOptions: ${{inputs.nodeOptions}}
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - name: Build
         id: build
         run: ${{ inputs.packageManager }} build:ts
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - uses: actions/cache@v3
         id: build-cache
         name: Save build cache
         with:
-          path: ./*
+          path: |
+            packages/**/dist
+            packages/**/tsconfig.tsbuildinfo
           key: ${{ github.sha }}

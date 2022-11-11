@@ -2,7 +2,7 @@ on:
   workflow_call:
     inputs:
       nodeVersion:
-        required: true
+        required: false
         type: string
         default: ".nvmrc"
       name:
@@ -14,8 +14,8 @@ on:
         default: yarn
       cacheVersion:
         type: string
-        required: false
-        default: v11
+        required: true
+        default: v1
       pnpmVersion:
         type: string
         required: false
@@ -25,7 +25,7 @@ on:
         required: false
         default: --max_old_space_size=8192 
     secrets:
-      natToken:
+      NODE_AUTH_TOKEN:
         required: true
 
 jobs:
@@ -39,25 +39,27 @@ jobs:
       - uses: AstrumU/shared-workflows/setup@feature/KAN-206
         name: setup env
         with:
-          nodeVersion: ${{inputs.nodeVersion}}
-          packageManager: ${{inputs.packageManager}}
-          cacheVersion: ${{inputs.cacheVersion}}
-          pnpmVersion: ${{inputs.pnpmVersion}}
+          nodeVersion: ${{ inputs.nodeVersion }}
+          packageManager: ${{ inputs.packageManager }}
+          cacheVersion: ${{ inputs.cacheVersion }}
+          pnpmVersion: ${{ inputs.pnpmVersion }}
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - uses: actions/cache@v3
         id: build-cache
         name: Restore build cache
         with:
-          path: ./*
+          path: |
+            packages/**/dist
+            packages/**/tsconfig.tsbuildinfo
           key: ${{ github.sha }}
 
       - name: Unit tests server
         run: yarn test:unit:server --ci
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
   test-unit-client:
@@ -70,25 +72,27 @@ jobs:
       - uses: AstrumU/shared-workflows/setup@feature/KAN-206
         name: setup env
         with:
-          nodeVersion: ${{inputs.nodeVersion}}
-          packageManager: ${{inputs.packageManager}}
-          cacheVersion: ${{inputs.cacheVersion}}
-          pnpmVersion: ${{inputs.pnpmVersion}}
+          nodeVersion: ${{ inputs.nodeVersion }}
+          packageManager: ${{ inputs.packageManager }}
+          cacheVersion: ${{ inputs.cacheVersion }}
+          pnpmVersion: ${{ inputs.pnpmVersion }}
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - uses: actions/cache@v3
         id: build-cache
         name: Restore build cache
         with:
-          path: ./*
+          path: |
+            packages/**/dist
+            packages/**/tsconfig.tsbuildinfo
           key: ${{ github.sha }}
 
       - name: Unit tests client
         run: yarn test:unit:client --ci
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
   test-int-client:
@@ -106,6 +110,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - uses: AstrumU/shared-workflows/setup@feature/KAN-206
+        name: setup env
+        with:
+          nodeVersion: ${{ inputs.nodeVersion }}
+          packageManager: ${{ inputs.packageManager }}
+          cacheVersion: ${{ inputs.cacheVersion }}
+          pnpmVersion: ${{ inputs.pnpmVersion }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+
       - name: Setup kernel for node native, increase watchers
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
@@ -114,22 +129,13 @@ jobs:
           sudo apt update
           sudo apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xvfb
 
-      - uses: AstrumU/shared-workflows/setup@feature/KAN-206
-        name: setup env
-        with:
-          nodeVersion: ${{inputs.nodeVersion}}
-          packageManager: ${{inputs.packageManager}}
-          cacheVersion: ${{inputs.cacheVersion}}
-          pnpmVersion: ${{inputs.pnpmVersion}}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
-
       - uses: actions/cache@v3
         id: build-cache
         name: Restore build cache
         with:
-          path: ./*
+          path: |
+            packages/**/dist
+            packages/**/tsconfig.tsbuildinfo
           key: ${{ github.sha }} 
 
       - name: Install & verify Cypress
@@ -149,7 +155,7 @@ jobs:
           command: yarn test:int:client:${{ matrix.client }}
           cache-key: cypress-${{ github.sha }}
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.natToken }}
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
           CYPRESS_defaultCommandTimeout: 8000
           TERM: xterm

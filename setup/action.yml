@@ -3,7 +3,7 @@ description: 'Shared configuration for checkout, NodeJS and package manager'
 inputs:
   nodeVersion:
     description: 'NodeJS Version to use'
-    required: true
+    required: false
     default: ".nvmrc"
   packageManager:
     description: 'Package Manager'
@@ -15,8 +15,8 @@ inputs:
     default: 7.13.3
   cacheVersion:
     description: 'PNPM/YARN cache version'
-    required: false
-    default: v11
+    required: true
+    default: v1
 
 runs:
   using: composite
