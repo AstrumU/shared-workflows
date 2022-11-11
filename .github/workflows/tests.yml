@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - uses: AstrumU/shared-workflows/setup@feature/KAN-206
-        name: setup env
+        name: Setup env
         with:
           nodeVersion: ${{ inputs.nodeVersion }}
           packageManager: ${{ inputs.packageManager }}
@@ -64,7 +64,7 @@ jobs:
 
     steps:
       - uses: AstrumU/shared-workflows/setup@feature/KAN-206
-        name: setup env
+        name: Setup env
         with:
           nodeVersion: ${{ inputs.nodeVersion }}
           packageManager: ${{ inputs.packageManager }}
@@ -102,7 +102,7 @@ jobs:
 
     steps:
       - uses: AstrumU/shared-workflows/setup@feature/KAN-206
-        name: setup env
+        name: Setup env
         with:
           nodeVersion: ${{ inputs.nodeVersion }}
           packageManager: ${{ inputs.packageManager }}
