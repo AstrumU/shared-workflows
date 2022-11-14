@@ -40,7 +40,6 @@ jobs:
           packageManager: ${{ inputs.packageManager }}
           cacheVersion: ${{ inputs.cacheVersion }}
           pnpmVersion: ${{ inputs.pnpmVersion }}
-          nodeOptions: ${{inputs.nodeOptions}}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
