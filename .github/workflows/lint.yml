@@ -29,48 +29,6 @@ on:
         required: true
 
 jobs:
-  audit:
-    runs-on: self-hosted
-
-    steps:
-      - uses: AstrumU/shared-workflows/setup@feature/KAN-206
-        name: Setup env
-        with:
-          nodeVersion: ${{ inputs.nodeVersion }}
-          packageManager: ${{ inputs.packageManager }}
-          cacheVersion: ${{ inputs.cacheVersion }}
-          pnpmVersion: ${{ inputs.pnpmVersion }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
-
-      - uses: ./.github/workflows/audit
-        name: Auditing
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
-
-  depchecker:
-    runs-on: self-hosted
-
-    steps:
-      - uses: AstrumU/shared-workflows/setup@feature/KAN-206
-        name: Setup env
-        with:
-          nodeVersion: ${{ inputs.nodeVersion }}
-          packageManager: ${{ inputs.packageManager }}
-          cacheVersion: ${{ inputs.cacheVersion }}
-          pnpmVersion: ${{ inputs.pnpmVersion }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
-
-      - name: Depchecker
-        run: ${{ inputs.packageManager }} depchecker
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{inputs.nodeOptions}}
-
   lint:
     runs-on: self-hosted
 
