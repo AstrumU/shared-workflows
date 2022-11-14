@@ -19,7 +19,7 @@ on:
       pnpmVersion:
         type: string
         required: false
-        default: 7.13.3
+        default: 7
       nodeOptions:
         type: string
         required: false
