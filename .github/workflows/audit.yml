@@ -23,7 +23,7 @@ on:
       nodeOptions:
         type: string
         required: false
-        default: --max_old_space_size=8192
+        default: "--max_old_space_size=8192"
     secrets:
       NODE_AUTH_TOKEN:
         required: true
@@ -44,7 +44,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
-      - name: Auditing 
+      - name: Auditing
         if: inputs.packageManager == 'pnpm'
         uses: AstrumU/shared-workflows/audit-pnpm@feature/KAN-206
         env:
