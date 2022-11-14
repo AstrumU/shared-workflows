@@ -29,24 +29,8 @@ on:
         required: true
 
 jobs:
-  dependencies:
-    runs-on: self-hosted
-
-    steps:
-      - uses: AstrumU/shared-workflows/setup@feature/KAN-206
-        name: Setup env
-        with:
-          nodeVersion: ${{ inputs.nodeVersion }}
-          packageManager: ${{ inputs.packageManager }}
-          cacheVersion: ${{ inputs.cacheVersion }}
-          pnpmVersion: ${{ inputs.pnpmVersion }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
-
   build:
     runs-on: self-hosted
-    needs: dependencies
 
     steps:
       - uses: AstrumU/shared-workflows/setup@feature/KAN-206
