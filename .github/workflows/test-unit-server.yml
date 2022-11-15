@@ -33,7 +33,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - uses: AstrumU/shared-workflows/setup@feature/KAN-206
+      - uses: AstrumU/shared-workflows/setup@main
         name: Setup env
         with:
           nodeVersion: ${{ inputs.nodeVersion }}
