@@ -45,15 +45,8 @@ jobs:
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - name: Auditing
-        if: inputs.packageManager == 'pnpm'
-        uses: AstrumU/shared-workflows/audit-pnpm@main
+        uses: AstrumU/shared-workflows/audit@main
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
-      - name: Auditing
-        if: inputs.packageManager == 'yarn'
-        uses: AstrumU/shared-workflows/audit-yarn@main
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
