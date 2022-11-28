@@ -24,10 +24,10 @@ on:
         type: string
         required: false
         default: "--max_old_space_size=8192"
-      matrixObject:
-        type: string
-        required: false
-        default: "[ client ]"
+      # matrixObject:
+      #   type: string
+      #   required: false
+      #   default: client
     secrets:
       NODE_AUTH_TOKEN:
         required: true
@@ -35,13 +35,13 @@ on:
 jobs:
   test-unit:
     runs-on: self-hosted
-    strategy:
-      fail-fast: false
-      matrix:
-        object:
-          ${{ inputs.matrixObject }}
-          # - client
-          # - server
+    #   strategy:
+    #     fail-fast: false
+    #     matrix:
+    #       object:
+    #         ${{ inputs.matrixObject }}
+    #         # - client
+    #         # - server
 
     name: test-unit-${{ matrix.object }}
 
