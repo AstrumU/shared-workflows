@@ -1,9 +1,0 @@
-name: "Audit"
-description: "Checks for known security issues with the installed packages. The output is a list of known issues."
-runs:
-  using: "composite"
-  steps:
-    - run: |
-        pnpm audit --prod --no-optional --audit-level high;
-        if [[ $? -eq 0 ]]; then echo -e "\e[92mAuditing complete\e[0m"; fi
-      shell: bash

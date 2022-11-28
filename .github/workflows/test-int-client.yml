@@ -61,7 +61,6 @@ jobs:
           sudo apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xvfb
 
       - uses: actions/cache@v3
-        id: build-cache
         name: Restore build cache
         with:
           path: |

@@ -24,13 +24,26 @@ on:
         type: string
         required: false
         default: "--max_old_space_size=8192"
+      matrixObject:
+        type: string
+        required: false
+        default: "[ client ]"
     secrets:
       NODE_AUTH_TOKEN:
         required: true
 
 jobs:
-  test-unit-server:
+  test-unit:
     runs-on: self-hosted
+    strategy:
+      fail-fast: false
+      matrix:
+        object:
+          ${{ inputs.matrixObject }}
+          # - client
+          # - server
+
+    name: test-unit-${{ matrix.object }}
 
     steps:
       - uses: AstrumU/shared-workflows/setup@main
@@ -45,7 +58,6 @@ jobs:
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - uses: actions/cache@v3
-        id: build-cache
         name: Restore build cache
         with:
           path: |
@@ -53,8 +65,8 @@ jobs:
             packages/**/tsconfig.tsbuildinfo
           key: ${{ github.sha }}
 
-      - name: Unit tests server
-        run: yarn test:unit:server --ci
+      - name: Unit tests ${{ matrix.object }}
+        run: yarn test:unit:${{ matrix.object }} --ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}

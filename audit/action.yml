@@ -1,0 +1,21 @@
+name: "Audit"
+description: "Checks for known security issues with the installed packages. The output is a list of known issues."
+inputs:
+  packageManager:
+    description: "Package Manager"
+    required: false
+    default: yarn
+runs:
+  using: "composite"
+  steps:
+    - name: Audit using yarn package manager
+      if: inputs.packageManager == 'yarn'
+      shell: bash
+      run: /bin/bash -c 'yarn audit --groups dependencies --silent; if [[ $? -ge 8 ]]; then yarn audit --groups dependencies --level high; else echo -e "\e[92mAuditing complete\e[0m"; fi'
+
+    - name: Audit using pnpm package manager
+      if: inputs.packageManager == 'pnpm'
+      shell: bash
+      run: |
+        pnpm audit --prod --no-optional --audit-level high;
+        if [[ $? -eq 0 ]]; then echo -e "\e[92mAuditing complete\e[0m"; fi

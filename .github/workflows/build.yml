@@ -44,18 +44,16 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
-      - name: Build
-        id: build
-        run: ${{ inputs.packageManager }} build:ts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
-
       - uses: actions/cache@v3
-        id: build-cache
-        name: Save build cache
+        name: Restore build cache
         with:
           path: |
             packages/**/dist
             packages/**/tsconfig.tsbuildinfo
           key: ${{ github.sha }}
+
+      - name: Build
+        run: ${{ inputs.packageManager }} build:ts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
