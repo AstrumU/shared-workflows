@@ -72,5 +72,5 @@ runs:
 
     - name: Dependencies
       shell: bash
-      if: ${{ steps.${{ inputs.packageManager }}_cache.outputs.cache-hit != 'true' }}
+      if: steps.${{ inputs.packageManager }}_cache.outputs.cache-hit != 'true'
       run: ${{ inputs.packageManager }} install --frozen-lockfile --check-files --ignore-scripts
