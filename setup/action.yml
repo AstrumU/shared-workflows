@@ -46,11 +46,11 @@ runs:
       shell: bash
       run: npm i -g yarn
 
-    - name: Get package manager
-      shell: bash
-      run: |
-        if inputs.packageManager == 'yarn'; then lockFile='pnpm-lock.yaml'; else lockFile='yarn.lock';fi
-        echo "lockFile=$lockFile" >> $GITHUB_ENV
+    # - name: Get package manager
+    #   shell: bash
+    #   run: |
+    #     if inputs.packageManager == 'yarn'; then lockFile='pnpm-lock.yaml'; else lockFile='yarn.lock';fi
+    #     echo "lockFile=$lockFile" >> $GITHUB_ENV
 
     - name: Restore node_modules cache yarn
       id: yarn_cache
@@ -59,7 +59,7 @@ runs:
         path: |
           node_modules
           packages/**/node_modules
-        key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('$lockFile') }}
+        key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('yarn.lock') }}
 
     - name: Restore node_modules cache pnpm
       id: pnpm_cache
@@ -68,7 +68,7 @@ runs:
         path: |
           node_modules
           packages/**/node_modules
-        key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('$lockFile') }}
+        key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('pnpm-lock.yaml') }}
 
     - name: Dependencies
       shell: bash
