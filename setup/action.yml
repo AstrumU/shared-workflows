@@ -68,10 +68,10 @@ runs:
 
     - name: yarn dependencies
       shell: bash
-      if: steps.yarn_cache.outputs.cache-hit != 'true'
+      if: ${{ inputs.packageManager == 'yarn' && steps.yarn_cache.outputs.cache-hit != 'true' }}
       run: ${{ inputs.packageManager }} install --frozen-lockfile --check-files --ignore-scripts
 
     - name: pnpm dependencies
       shell: bash
-      if: steps.pnpm_cache.outputs.cache-hit != 'true'
-      run: ${{ inputs.packageManager }} install --frozen-lockfile --check-files --ignore-scripts
+      if: ${{ inputs.packageManager == 'pnpm' && steps.pnpm_cache.outputs.cache-hit != 'true' }}
+      run: ${{ inputs.packageManager }} install --frozen-lockfile
