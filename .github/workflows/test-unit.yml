@@ -46,7 +46,7 @@ jobs:
     name: test-unit-${{ matrix.object }}
 
     steps:
-      - uses: AstrumU/shared-workflows/setup@main
+      - uses: AstrumU/shared-workflows/setup@feature/KAN-240
         name: Setup env
         with:
           nodeVersion: ${{ inputs.nodeVersion }}
