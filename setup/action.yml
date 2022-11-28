@@ -52,14 +52,23 @@ runs:
         if inputs.packageManager == 'yarn'; then lockFile='pnpm-lock.yaml'; else lockFile='yarn.lock';fi
         echo "lockFile=$lockFile" >> $GITHUB_ENV
 
-    - name: Restore node_modules cache ${{ inputs.packageManager }}
-      id: ${{ inputs.packageManager }}_cache
+    - name: Restore node_modules cache yarn
+      id: yarn_cache
       uses: actions/cache@v3
       with:
         path: |
           node_modules
           packages/**/node_modules
-        key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles($lockFile) }}
+        key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('$lockFile') }}
+
+    - name: Restore node_modules cache pnpm
+      id: pnpm_cache
+      uses: actions/cache@v3
+      with:
+        path: |
+          node_modules
+          packages/**/node_modules
+        key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('$lockFile') }}
 
     - name: Dependencies
       shell: bash
