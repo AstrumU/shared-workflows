@@ -24,10 +24,10 @@ on:
         type: string
         required: false
         default: "--max_old_space_size=8192"
-      # matrixObject:
-      #   type: string
-      #   required: false
-      #   default: client
+      matrixObject:
+        type: string
+        required: false
+        default: client
     secrets:
       NODE_AUTH_TOKEN:
         required: true
@@ -43,7 +43,7 @@ jobs:
     #         # - client
     #         # - server
 
-    name: test-unit-${{ matrix.object }}
+    name: test-unit-${{ inputs.matrixObject }}
 
     steps:
       - uses: AstrumU/shared-workflows/setup@feature/KAN-240
@@ -65,8 +65,8 @@ jobs:
             packages/**/tsconfig.tsbuildinfo
           key: ${{ github.sha }}
 
-      - name: Unit tests ${{ matrix.object }}
-        run: yarn test:unit:${{ matrix.object }} --ci
+      - name: Unit tests ${{ inputs.matrixObject }}
+        run: yarn test:unit:${{ inputs.matrixObject }} --ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
