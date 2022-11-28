@@ -46,14 +46,9 @@ runs:
       shell: bash
       run: npm i -g yarn
 
-    # - name: Get package manager
-    #   shell: bash
-    #   run: |
-    #     if inputs.packageManager == 'yarn'; then lockFile='pnpm-lock.yaml'; else lockFile='yarn.lock';fi
-    #     echo "lockFile=$lockFile" >> $GITHUB_ENV
-
     - name: Restore node_modules cache yarn
       id: yarn_cache
+      if: inputs.packageManager == 'yarn'
       uses: actions/cache@v3
       with:
         path: |
@@ -63,6 +58,7 @@ runs:
 
     - name: Restore node_modules cache pnpm
       id: pnpm_cache
+      if: inputs.packageManager == 'pnpm'
       uses: actions/cache@v3
       with:
         path: |
@@ -70,7 +66,12 @@ runs:
           packages/**/node_modules
         key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('pnpm-lock.yaml') }}
 
-    - name: Dependencies
+    - name: yarn dependencies
       shell: bash
-      if: steps.${{ inputs.packageManager }}_cache.outputs.cache-hit != 'true'
+      if: steps.yarn_cache.outputs.cache-hit != 'true'
+      run: ${{ inputs.packageManager }} install --frozen-lockfile --check-files --ignore-scripts
+
+    - name: pnpm dependencies
+      shell: bash
+      if: steps.pnpm_cache.outputs.cache-hit != 'true'
       run: ${{ inputs.packageManager }} install --frozen-lockfile --check-files --ignore-scripts

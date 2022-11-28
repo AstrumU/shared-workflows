@@ -24,6 +24,10 @@ on:
         type: string
         required: false
         default: "--max_old_space_size=8192"
+      matrixClient:
+        type: string
+        required: false
+        default: skillset, toolkit-mba
     secrets:
       NODE_AUTH_TOKEN:
         required: true
@@ -31,14 +35,8 @@ on:
 jobs:
   test-int-client:
     runs-on: self-hosted
-    strategy:
-      fail-fast: false
-      matrix:
-        client:
-          - skillset
-          - toolkit-mba
 
-    name: test-int-client-${{ matrix.client }}
+    name: test-int-client-${{ inputs.matrixClient }}
 
     steps:
       - uses: AstrumU/shared-workflows/setup@feature/KAN-240
@@ -78,11 +76,11 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           CI: 1
 
-      - name: Test ${{ matrix.client }} client
+      - name: Test ${{ inputs.matrixClient }} client
         uses: cypress-io/github-action@v2
         with:
           install: false
-          command: yarn test:int:client:${{ matrix.client }}
+          command: yarn test:int:client:${{ inputs.matrixClient }}
           cache-key: cypress-${{ github.sha }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}

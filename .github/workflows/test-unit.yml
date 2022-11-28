@@ -35,13 +35,6 @@ on:
 jobs:
   test-unit:
     runs-on: self-hosted
-    #   strategy:
-    #     fail-fast: false
-    #     matrix:
-    #       object:
-    #         ${{ inputs.matrixObject }}
-    #         # - client
-    #         # - server
 
     name: test-unit-${{ inputs.matrixObject }}
 
