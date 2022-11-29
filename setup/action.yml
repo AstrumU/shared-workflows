@@ -13,10 +13,10 @@ inputs:
     description: "PNPM Manager version"
     required: false
     default: "7"
-  cacheVersion:
-    description: "PNPM/YARN cache version"
-    required: true
-    default: v1
+  # cacheVersion:
+  #   description: "PNPM/YARN cache version"
+  #   required: true
+  #   default: v1
 
 runs:
   using: composite
@@ -46,33 +46,33 @@ runs:
       shell: bash
       run: npm i -g yarn
 
-    - name: Restore node_modules cache yarn
-      id: yarn_cache
-      if: inputs.packageManager == 'yarn'
-      uses: actions/cache@v3
-      with:
-        path: |
-          node_modules
-          packages/**/node_modules
-        key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('yarn.lock') }}
-
-    # - name: Restore node_modules cache pnpm
-    #   id: pnpm_cache
-    #   if: inputs.packageManager == 'pnpm'
+    # - name: Restore node_modules cache yarn
+    #   id: yarn_cache
+    #   if: inputs.packageManager == 'yarn'
     #   uses: actions/cache@v3
     #   with:
     #     path: |
     #       node_modules
     #       packages/**/node_modules
-    #     key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('pnpm-lock.yaml') }}
+    #     key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('yarn.lock') }}
 
-    - name: yarn dependencies
-      shell: bash
-      if: ${{ inputs.packageManager == 'yarn' && steps.yarn_cache.outputs.cache-hit != 'true' }}
-      run: ${{ inputs.packageManager }} install --frozen-lockfile --check-files --ignore-scripts
+    # # - name: Restore node_modules cache pnpm
+    # #   id: pnpm_cache
+    # #   if: inputs.packageManager == 'pnpm'
+    # #   uses: actions/cache@v3
+    # #   with:
+    # #     path: |
+    # #       node_modules
+    # #       packages/**/node_modules
+    # #     key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('pnpm-lock.yaml') }}
 
-    - name: pnpm dependencies
-      shell: bash
-      if: inputs.packageManager == 'pnpm'
-      # if: ${{ inputs.packageManager == 'pnpm' && steps.pnpm_cache.outputs.cache-hit != 'true' }}
-      run: ${{ inputs.packageManager }} install --frozen-lockfile
+    # - name: yarn dependencies
+    #   shell: bash
+    #   if: ${{ inputs.packageManager == 'yarn' && steps.yarn_cache.outputs.cache-hit != 'true' }}
+    #   run: ${{ inputs.packageManager }} install --frozen-lockfile --check-files --ignore-scripts
+
+    # - name: pnpm dependencies
+    #   shell: bash
+    #   if: inputs.packageManager == 'pnpm'
+    #   # if: ${{ inputs.packageManager == 'pnpm' && steps.pnpm_cache.outputs.cache-hit != 'true' }}
+    #   run: ${{ inputs.packageManager }} install --frozen-lockfile
