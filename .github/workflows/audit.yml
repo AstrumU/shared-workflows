@@ -33,7 +33,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - uses: AstrumU/shared-workflows/setup@main
+      - uses: AstrumU/shared-workflows/setup@feature/KAN-240
         name: Setup env
         with:
           nodeVersion: ${{ inputs.nodeVersion }}
@@ -45,7 +45,7 @@ jobs:
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - name: Auditing
-        uses: AstrumU/shared-workflows/audit@main
+        uses: AstrumU/shared-workflows/audit@feature/KAN-240
         with:
           packageManager: ${{ inputs.packageManager }}
         env:

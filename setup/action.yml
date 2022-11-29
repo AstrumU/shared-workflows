@@ -56,15 +56,15 @@ runs:
           packages/**/node_modules
         key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('yarn.lock') }}
 
-    - name: Restore node_modules cache pnpm
-      id: pnpm_cache
-      if: inputs.packageManager == 'pnpm'
-      uses: actions/cache@v3
-      with:
-        path: |
-          node_modules
-          packages/**/node_modules
-        key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('pnpm-lock.yaml') }}
+    # - name: Restore node_modules cache pnpm
+    #   id: pnpm_cache
+    #   if: inputs.packageManager == 'pnpm'
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: |
+    #       node_modules
+    #       packages/**/node_modules
+    #     key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('pnpm-lock.yaml') }}
 
     - name: yarn dependencies
       shell: bash
@@ -73,5 +73,6 @@ runs:
 
     - name: pnpm dependencies
       shell: bash
-      if: ${{ inputs.packageManager == 'pnpm' && steps.pnpm_cache.outputs.cache-hit != 'true' }}
+      if: inputs.packageManager == 'pnpm'
+      # if: ${{ inputs.packageManager == 'pnpm' && steps.pnpm_cache.outputs.cache-hit != 'true' }}
       run: ${{ inputs.packageManager }} install --frozen-lockfile
