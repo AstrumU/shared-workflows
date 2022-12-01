@@ -38,24 +38,38 @@ jobs:
         with:
           nodeVersion: ${{ inputs.nodeVersion }}
           packageManager: ${{ inputs.packageManager }}
-          cacheVersion: ${{ inputs.cacheVersion }}
           pnpmVersion: ${{ inputs.pnpmVersion }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
+      - name: Install dependencies
+        uses: AstrumU/shared-workflows/dependencies@main
+        with:
+          packageManager: ${{ inputs.packageManager }}
+          cacheVersion: ${{ inputs.cacheVersion }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+
       - name: Build
-        id: build
         run: ${{ inputs.packageManager }} build:ts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - uses: actions/cache@v3
-        id: build-cache
-        name: Save build cache
+        name: Save yarn build cache
+        if: inputs.packageManager == 'yarn'
         with:
           path: |
             packages/**/dist
             packages/**/tsconfig.tsbuildinfo
+          key: ${{ github.sha }}
+
+      - uses: actions/cache@v3
+        name: Save pnpm build cache
+        if: inputs.packageManager == 'pnpm'
+        with:
+          path: ./*
           key: ${{ github.sha }}
