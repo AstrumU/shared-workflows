@@ -1,18 +1,22 @@
-name: "Configure Environment"
-description: "Shared configuration for checkout, NodeJS and package manager"
+name: 'Configure Environment'
+description: 'Shared configuration for checkout, NodeJS and package manager'
 inputs:
   nodeVersion:
-    description: "NodeJS Version to use"
+    description: 'NodeJS Version to use'
     required: false
     default: ".nvmrc"
   packageManager:
-    description: "Package Manager"
+    description: 'Package Manager'
     required: false
     default: yarn
   pnpmVersion:
-    description: "PNPM Manager version"
+    description: 'PNPM Manager version'
     required: false
-    default: "7"
+    default: '7'
+  cacheVersion:
+    description: 'PNPM/YARN cache version'
+    required: true
+    default: v1
 
 runs:
   using: composite
@@ -20,10 +24,10 @@ runs:
     - uses: actions/checkout@v3
       name: Checkout
       with:
-        fetch-depth: 0
-        ref: ${{ github.event.workflow_run.head_branch }}
+          fetch-depth: 0
+          ref: ${{ github.event.workflow_run.head_branch }}
 
-    - name: Setup pnpm
+    - name: Setup ${{ inputs.packageManager }}
       id: pnpm_setup
       if: inputs.packageManager == 'pnpm'
       uses: pnpm/action-setup@v2.2.4
@@ -31,13 +35,47 @@ runs:
         version: ${{ inputs.pnpmVersion }}
         run_install: false
 
-    - name: Setup yarn
-      id: yarn_setup
-      if: inputs.packageManager == 'yarn'
-      shell: bash
-      run: npm i -g yarn
-
     - name: setup node
       uses: actions/setup-node@v3
       with:
-        node-version-file: ${{ inputs.nodeVersion }}
+       node-version-file: ${{ inputs.nodeVersion }}
+       
+    - name: Setup ${{ inputs.packageManager }}
+      id: yarn_setup
+      if: inputs.packageManager == 'yarn'
+      shell: bash 
+      run: npm i -g yarn 
+
+    - name: Restore node_modules cache ${{ inputs.packageManager }}
+      id: pnpm_cache
+      if: inputs.packageManager == 'pnpm'
+      uses: actions/cache@v3
+      with:
+          path: |
+            node_modules
+            packages/**/node_modules
+          key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+    - name: Restore node_modules cache ${{ inputs.packageManager }}
+      id: yarn_cache
+      if: inputs.packageManager == 'yarn'
+      uses: actions/cache@v3
+      with:
+          path: |
+            node_modules
+            packages/**/node_modules
+          key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('yarn.lock') }}
+
+    - name: yarn install
+      shell: bash
+      if: ${{ inputs.packageManager == 'yarn' && steps.yarn_cache.outputs.cache-hit != 'true' }}
+      run: yarn install --frozen-lockfile --check-files --ignore-scripts
+
+    - name: pnpm install
+      shell: bash
+      if: ${{ inputs.packageManager == 'pnpm' && steps.pnpm_cache.outputs.cache-hit != 'true' }}
+      run: pnpm install --frozen-lockfile

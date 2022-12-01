@@ -38,16 +38,8 @@ jobs:
         with:
           nodeVersion: ${{ inputs.nodeVersion }}
           packageManager: ${{ inputs.packageManager }}
-          pnpmVersion: ${{ inputs.pnpmVersion }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
-
-      - name: Install dependencies
-        uses: AstrumU/shared-workflows/dependencies@main
-        with:
-          packageManager: ${{ inputs.packageManager }}
           cacheVersion: ${{ inputs.cacheVersion }}
+          pnpmVersion: ${{ inputs.pnpmVersion }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
