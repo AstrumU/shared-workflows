@@ -31,13 +31,13 @@ runs:
         version: ${{ inputs.pnpmVersion }}
         run_install: false
 
-    - name: setup node
-      uses: actions/setup-node@v3
-      with:
-        node-version-file: ${{ inputs.nodeVersion }}
-
     - name: Setup yarn
       id: yarn_setup
       if: inputs.packageManager == 'yarn'
       shell: bash
       run: npm i -g yarn
+
+    - name: setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version-file: ${{ inputs.nodeVersion }}
