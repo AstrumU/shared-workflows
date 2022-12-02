@@ -13,10 +13,6 @@ inputs:
     description: "PNPM Manager version"
     required: false
     default: "7"
-  # cacheVersion:
-  #   description: "PNPM/YARN cache version"
-  #   required: true
-  #   default: v1
 
 runs:
   using: composite
@@ -27,6 +23,11 @@ runs:
         fetch-depth: 0
         ref: ${{ github.event.workflow_run.head_branch }}
 
+    - name: setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version-file: ${{ inputs.nodeVersion }}
+
     - name: Setup pnpm
       id: pnpm_setup
       if: inputs.packageManager == 'pnpm'
@@ -35,44 +36,8 @@ runs:
         version: ${{ inputs.pnpmVersion }}
         run_install: false
 
-    - name: setup node
-      uses: actions/setup-node@v3
-      with:
-        node-version-file: ${{ inputs.nodeVersion }}
-
     - name: Setup yarn
       id: yarn_setup
       if: inputs.packageManager == 'yarn'
       shell: bash
       run: npm i -g yarn
-
-    # - name: Restore node_modules cache yarn
-    #   id: yarn_cache
-    #   if: inputs.packageManager == 'yarn'
-    #   uses: actions/cache@v3
-    #   with:
-    #     path: |
-    #       node_modules
-    #       packages/**/node_modules
-    #     key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('yarn.lock') }}
-
-    # # - name: Restore node_modules cache pnpm
-    # #   id: pnpm_cache
-    # #   if: inputs.packageManager == 'pnpm'
-    # #   uses: actions/cache@v3
-    # #   with:
-    # #     path: |
-    # #       node_modules
-    # #       packages/**/node_modules
-    # #     key: ${{ runner.os }}-${{ inputs.cacheVersion }}-${{ hashFiles('pnpm-lock.yaml') }}
-
-    # - name: yarn dependencies
-    #   shell: bash
-    #   if: ${{ inputs.packageManager == 'yarn' && steps.yarn_cache.outputs.cache-hit != 'true' }}
-    #   run: ${{ inputs.packageManager }} install --frozen-lockfile --check-files --ignore-scripts
-
-    # - name: pnpm dependencies
-    #   shell: bash
-    #   if: inputs.packageManager == 'pnpm'
-    #   # if: ${{ inputs.packageManager == 'pnpm' && steps.pnpm_cache.outputs.cache-hit != 'true' }}
-    #   run: ${{ inputs.packageManager }} install --frozen-lockfile

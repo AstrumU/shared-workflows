@@ -38,21 +38,29 @@ jobs:
         with:
           nodeVersion: ${{ inputs.nodeVersion }}
           packageManager: ${{ inputs.packageManager }}
-          # cacheVersion: ${{ inputs.cacheVersion }}
           pnpmVersion: ${{ inputs.pnpmVersion }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
+      - name: Install dependencies
+        uses: AstrumU/shared-workflows/dependencies@feature/KAN-240
+        with:
+          packageManager: ${{ inputs.packageManager }}
+          cacheVersion: ${{ inputs.cacheVersion }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+
       - uses: actions/cache@v3
-        name: Restore build cache
+        name: Cache
         if: inputs.packageManager == 'pnpm'
         with:
           path: ./*
           key: ${{ github.sha }}
 
       - uses: actions/cache@v3
-        name: Restore build cache
+        name: Cache
         if: inputs.packageManager == 'yarn'
         with:
           path: |
