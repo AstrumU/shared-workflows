@@ -52,6 +52,15 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
+      - name: Install dependencies
+        uses: AstrumU/shared-workflows/dependencies@fix/KAN-242
+        with:
+          packageManager: ${{ inputs.packageManager }}
+          cacheVersion: ${{ inputs.cacheVersion }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+
       - name: Setup kernel for node native, increase watchers
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
