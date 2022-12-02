@@ -41,7 +41,7 @@ jobs:
     name: test-int-client-${{ matrix.client }}
 
     steps:
-      - uses: AstrumU/shared-workflows/setup@main
+      - uses: AstrumU/shared-workflows/setup@fix/KAN-242
         name: Setup env
         with:
           nodeVersion: ${{ inputs.nodeVersion }}
