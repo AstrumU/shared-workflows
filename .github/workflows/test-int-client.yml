@@ -62,7 +62,7 @@ jobs:
 
       - uses: actions/cache@v3
         id: build-cache
-        name: Restore build cache
+        name: Cache
         with:
           path: |
             packages/**/dist

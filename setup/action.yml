@@ -23,6 +23,11 @@ runs:
         fetch-depth: 0
         ref: ${{ github.event.workflow_run.head_branch }}
 
+    - name: setup node
+      uses: actions/setup-node@v3
+      with:
+        node-version-file: ${{ inputs.nodeVersion }}
+
     - name: Setup pnpm
       id: pnpm_setup
       if: inputs.packageManager == 'pnpm'
@@ -36,8 +41,3 @@ runs:
       if: inputs.packageManager == 'yarn'
       shell: bash
       run: npm i -g yarn
-
-    - name: setup node
-      uses: actions/setup-node@v3
-      with:
-        node-version-file: ${{ inputs.nodeVersion }}

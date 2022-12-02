@@ -44,14 +44,14 @@ jobs:
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - uses: actions/cache@v3
-        name: Restore build cache
+        name: Cache
         if: inputs.packageManager == 'pnpm'
         with:
           path: ./*
           key: ${{ github.sha }}
 
       - uses: actions/cache@v3
-        name: Restore build cache
+        name: Cache
         if: inputs.packageManager == 'yarn'
         with:
           path: |
