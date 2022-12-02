@@ -29,7 +29,6 @@ runs:
         node-version-file: ${{ inputs.nodeVersion }}
 
     - name: Setup pnpm
-      id: pnpm_setup
       if: inputs.packageManager == 'pnpm'
       uses: pnpm/action-setup@v2.2.4
       with:
@@ -37,7 +36,6 @@ runs:
         run_install: false
 
     - name: Setup yarn
-      id: yarn_setup
       if: inputs.packageManager == 'yarn'
       shell: bash
       run: npm i -g yarn
