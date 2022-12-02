@@ -1,29 +1,30 @@
 on:
   workflow_call:
     inputs:
-      nodeVersion:
+      node-version-file:
         required: false
         type: string
         default: ".nvmrc"
-      name:
-        required: false
-        type: string
-      packageManager:
+      package-manager:
         type: string
         required: false
         default: yarn
-      cacheVersion:
+      cache-version:
         type: string
-        required: true
+        required: false
         default: v1
-      pnpmVersion:
+      pnpm-version:
         type: string
         required: false
         default: 7
-      nodeOptions:
+      node-options:
         type: string
         required: false
         default: "--max_old_space_size=8192"
+      lock-file:
+        type: string
+        required: false
+        default: "yarn.lock"
     secrets:
       NODE_AUTH_TOKEN:
         required: true
@@ -33,43 +34,34 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - uses: AstrumU/shared-workflows/setup@main
-        name: Setup env
+      - name: Setup env
+        uses: AstrumU/shared-workflows/setup@feature/testing-changes
         with:
-          nodeVersion: ${{ inputs.nodeVersion }}
-          packageManager: ${{ inputs.packageManager }}
-          pnpmVersion: ${{ inputs.pnpmVersion }}
+          node-version-file: ${{ inputs.node-version-file }}
+          package-manager: ${{ inputs.package-manager }}
+          pnpm-version: ${{ inputs.pnpm-version }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+          NODE_OPTIONS: ${{ inputs.node-options }}
 
-      - name: Install dependencies
-        uses: AstrumU/shared-workflows/dependencies@main
+      - name: Cache dependencies
+        uses: AstrumU/shared-workflows/cache-dependencies@feature/testing-changes
+        id: cache-dependencies
         with:
-          packageManager: ${{ inputs.packageManager }}
-          cacheVersion: ${{ inputs.cacheVersion }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+          package-manager: ${{ inputs.package-manager }}
+          cache-version: ${{ inputs.cache-version }}
+          lock-file: ${{ inputs.lock-file }}
+
+      - name: Cache build
+        id: cache-build
+        uses: AstrumU/shared-workflows/cache-build@feature/testing-changes
+        with:
+          package-manager: ${{ inputs.package-manager }}
 
       - name: Build
-        run: ${{ inputs.packageManager }} build:ts
+        if: ${{ steps.cache-build.outputs.cache-hit != 'true' }}
+        run: ${{ inputs.package-manager }} build:ts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+          NODE_OPTIONS: ${{ inputs.node-options }}
 
-      - uses: actions/cache@v3
-        name: Cache
-        if: inputs.packageManager == 'yarn'
-        with:
-          path: |
-            packages/**/dist
-            packages/**/tsconfig.tsbuildinfo
-          key: ${{ github.sha }}
-
-      - uses: actions/cache@v3
-        name: Cache
-        if: inputs.packageManager == 'pnpm'
-        with:
-          path: ./*
-          key: ${{ github.sha }}

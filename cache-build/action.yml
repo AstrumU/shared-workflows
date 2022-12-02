@@ -1,0 +1,54 @@
+name: "Cache build"
+description: "Cache build artifacts"
+inputs:
+  package-manager:
+    description: "Package Manager"
+    required: false
+    default: yarn
+outputs:
+  cache-hit:
+    description: "A boolean value to indicate an exact match was found for the primary key"
+    value: ${{ steps.cache.outputs.cache-hit }}
+runs:
+  using: composite
+  steps:
+    # - name: "Cache build"
+    #   uses: actions/cache@v3
+    #   if: inputs.package-manager == 'pnpm'
+    #   id: pnpm-build-cache
+    #   with:
+    #     path: ./*
+    #     key: build-${{ github.sha }}
+    - name: "Get cache path"
+      uses: AstrumU/shared-workflows/.github/actions/get-workspace@feature/testing-changes
+      id: cache-path
+      with:
+        package-manager: ${{ inputs.package-manager }}
+
+    - name: "Cache build"
+      uses: actions/cache@v3
+      id: cache
+      with:
+        path: |
+          ${{ steps.cache-path.outputs.build-cache-path }}
+        key: build-${{ github.sha }}
+
+    # - name: "Cache build"
+    #   uses: actions/cache@v3
+    #   if: inputs.package-manager == 'yarn'
+    #   id: yarn-build-cache
+    #   with:
+    #     path: |
+    #       packages/**/dist
+    #       packages/**/tsconfig.tsbuildinfo
+    #     key: build-${{ github.sha }}
+
+    # - name: Get cache id
+    #   id: cache
+    #   shell: bash
+    #   run: |
+    #     if [ ${{ inputs.package-manager }} == 'yarn' ]; then 
+    #       echo "cache-hit=${{ steps.yarn-build-cache.outputs.cache-hit }}" >> $GITHUB_OUTPUT
+    #     else
+    #       echo "cache-hit=${{ steps.pnpm-build-cache.outputs.cache-hit }}" >> $GITHUB_OUTPUT
+    #     fi

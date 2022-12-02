@@ -25,12 +25,17 @@ on:
         type: string
         required: false
         default: "yarn.lock"
+      args:
+        type: string
+        description: Additional flags to pass to the install command.
+        default: "--frozen-lockfile"
+        required: false
     secrets:
       NODE_AUTH_TOKEN:
         required: true
 
 jobs:
-  depchecker:
+  dependencies:
     runs-on: self-hosted
 
     steps:
@@ -43,21 +48,18 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.node-options }}
-
+      
       - name: Cache dependencies
         uses: AstrumU/shared-workflows/cache-dependencies@feature/testing-changes
+        id: cache-dependencies
         with:
           package-manager: ${{ inputs.package-manager }}
           cache-version: ${{ inputs.cache-version }}
           lock-file: ${{ inputs.lock-file }}
-
-      - name: Cache build
-        uses: AstrumU/shared-workflows/cache-build@feature/testing-changes
-        with:
-          package-manager: ${{ inputs.package-manager }}
-
-      - name: Depchecker
-        run: ${{ inputs.package-manager }} depchecker
+      
+      - name: Dependencies
+        if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
+        run: ${{ inputs.package-manager }} install ${{ inputs.args }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{inputs.node-options}}
+          NODE_OPTIONS: ${{ inputs.node-options }}

@@ -25,17 +25,20 @@ on:
         type: string
         required: false
         default: "yarn.lock"
+      app-layer:
+        type: string
+        required: true
     secrets:
       NODE_AUTH_TOKEN:
         required: true
 
 jobs:
-  depchecker:
+  test-unit:
     runs-on: self-hosted
 
     steps:
-      - name: Setup env
-        uses: AstrumU/shared-workflows/setup@feature/testing-changes
+      - uses: AstrumU/shared-workflows/setup@feature/testing-changes
+        name: Setup env
         with:
           node-version-file: ${{ inputs.node-version-file }}
           package-manager: ${{ inputs.package-manager }}
@@ -56,8 +59,8 @@ jobs:
         with:
           package-manager: ${{ inputs.package-manager }}
 
-      - name: Depchecker
-        run: ${{ inputs.package-manager }} depchecker
+      - name: Unit tests ${{ inputs.app-layer }}
+        run: ${{ inputs.package-manager }} test:unit:${{ inputs.app-layer }} --ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{inputs.node-options}}
+          NODE_OPTIONS: ${{ inputs.node-options }}
