@@ -52,6 +52,15 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
+      - name: Install dependencies
+        uses: AstrumU/shared-workflows/dependencies@main
+        with:
+          packageManager: ${{ inputs.packageManager }}
+          cacheVersion: ${{ inputs.cacheVersion }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+
       - name: Setup kernel for node native, increase watchers
         run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
@@ -62,7 +71,7 @@ jobs:
 
       - uses: actions/cache@v3
         id: build-cache
-        name: Restore build cache
+        name: Cache
         with:
           path: |
             packages/**/dist
