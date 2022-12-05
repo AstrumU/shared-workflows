@@ -29,7 +29,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - uses: AstrumU/shared-workflows/setup@fix/KAN-242
+      - uses: AstrumU/shared-workflows/setup@main
         name: Setup env
         with:
           nodeVersion: ${{ inputs.nodeVersion }}
@@ -41,14 +41,14 @@ jobs:
 
       - name: Auditing
         if: inputs.packageManager == 'pnpm'
-        uses: AstrumU/shared-workflows/audit-pnpm@fix/KAN-242
+        uses: AstrumU/shared-workflows/audit-pnpm@main
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
 
       - name: Auditing
         if: inputs.packageManager == 'yarn'
-        uses: AstrumU/shared-workflows/audit-yarn@fix/KAN-242
+        uses: AstrumU/shared-workflows/audit-yarn@main
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.nodeOptions }}
