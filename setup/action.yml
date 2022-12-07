@@ -30,15 +30,6 @@ runs:
       with:
         version: ${{ inputs.pnpm-version }}
         run_install: false
-    
-    # - name: Setup yarn support
-    #   if: inputs.package-manager == 'yarn'
-    #   shell: bash
-    #   run: |
-    #     sudo apt-get update && sudo apt-get install -y curl
-    #     sudo curl -fsSL -o /usr/bin/yarn -N \
-    #       https://github.com/yarnpkg/yarn/releases/download/v1.22.17/yarn-1.22.17.js 
-    #     sudo chmod +x /usr/bin/yarn
 
     - name: Setup node
       uses: actions/setup-node@v3

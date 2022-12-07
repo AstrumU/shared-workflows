@@ -17,9 +17,6 @@ outputs:
   cache-hit:
     description: "A boolean value to indicate an exact match was found for the primary key"
     value: ${{ steps.cache.outputs.cache-hit }}
-  # cache-path:
-  #   description: 'Path to node_modules'
-  #   value: ${{ steps.get-workspace.outputs.cache-path }}
 
 runs:
   using: composite
@@ -37,39 +34,3 @@ runs:
         path: |
           ${{ steps.cache-path.outputs.dependency-cache-path }}
         key: ${{ runner.os }}-${{ inputs.package-manager }}-${{ inputs.cache-version }}-${{ hashFiles(format('{0}', inputs.lock-file)) }}
-
-    # - name: "Get pnpm workspace"
-    #   id: get-workspace
-    #   if: inputs.package-manager == 'pnpm'
-    #   run: |
-    #     pnpm add -g glob
-    #     echo "cache-path=$(node scripts/parse-workspace.js | tr -d "'"'\n')" >> $GITHUB_OUTPUT
-    #   shell: bash
-
-    # - name: "Cache dependencies"
-    #   uses: actions/cache@v3
-    #   id: pnpm-cache
-    #   if: inputs.package-manager == 'pnpm'
-    #   with:
-    #     path: ${{ steps.get-workspace.outputs.cache-path }}
-    #     key: ${{ runner.os }}-${{ inputs.package-manager }}-${{ inputs.cache-version }}-${{ hashFiles(format('{0}', inputs.lock-file)) }}
-
-    # - name: "Cache dependencies"
-    #   uses: actions/cache@v3
-    #   id: yarn-cache
-    #   if: inputs.package-manager == 'yarn'
-    #   with:
-    #     path: |
-    #         node_modules
-    #         packages/**/node_modules
-    #     key: ${{ runner.os }}-${{ inputs.package-manager }}-${{ inputs.cache-version }}-${{ hashFiles(format('{0}', inputs.lock-file)) }}
-
-    # - name: Get cache id
-    #   id: cache
-    #   shell: bash
-    #   run: |
-    #     if [ ${{ inputs.package-manager }} == 'yarn' ]; then 
-    #       echo "cache-hit=${{ steps.yarn-cache.outputs.cache-hit }}" >> $GITHUB_OUTPUT
-    #     else
-    #       echo "cache-hit=${{ steps.pnpm-cache.outputs.cache-hit }}" >> $GITHUB_OUTPUT
-    #     fi
