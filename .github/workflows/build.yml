@@ -73,7 +73,7 @@ jobs:
           package-manager: ${{ inputs.package-manager }}
 
       - name: Build
-        if: ${{ steps.cache-build.outputs.env.cache-hit != 'true' }}
+        if: ${{ steps.cache-build.outputs.pnpm-build-cache-hit != 'true' }}
         run: ${{ inputs.package-manager }} build:ts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
