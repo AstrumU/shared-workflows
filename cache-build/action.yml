@@ -13,7 +13,7 @@ runs:
   using: composite
   steps:
     - name: "Get cache path"
-      uses: AstrumU/shared-workflows/.github/actions/get-workspace@feature/KAN-240
+      uses: AstrumU/shared-workflows/.github/actions/get-workspace@main
       id: cache-path
       with:
         package-manager: ${{ inputs.package-manager }}
