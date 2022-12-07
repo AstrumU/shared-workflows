@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: Setup env
-        uses: AstrumU/shared-workflows/setup@feature/testing-changes
+        uses: AstrumU/shared-workflows/setup@main
         with:
           node-version-file: ${{ inputs.node-version-file }}
           package-manager: ${{ inputs.package-manager }}
@@ -45,14 +45,14 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Cache dependencies
-        uses: AstrumU/shared-workflows/cache-dependencies@feature/testing-changes
+        uses: AstrumU/shared-workflows/cache-dependencies@main
         with:
           package-manager: ${{ inputs.package-manager }}
           cache-version: ${{ inputs.cache-version }}
           lock-file: ${{ inputs.lock-file }}
 
       - name: Cache build
-        uses: AstrumU/shared-workflows/cache-build@feature/testing-changes
+        uses: AstrumU/shared-workflows/cache-build@main
         with:
           package-manager: ${{ inputs.package-manager }}
 

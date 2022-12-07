@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Setup env
-        uses: AstrumU/shared-workflows/setup@feature/testing-changes
+        uses: AstrumU/shared-workflows/setup@main
         with:
           node-version-file: ${{ inputs.node-version-file }}
           package-manager: ${{ inputs.package-manager }}
@@ -37,10 +37,9 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Auditing
-        uses: AstrumU/shared-workflows/audit@feature/testing-changes
+        uses: AstrumU/shared-workflows/audit@main
         with:
           package-manager: ${{ inputs.package-manager }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.node-options }}
-
