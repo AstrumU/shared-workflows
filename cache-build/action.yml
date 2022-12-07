@@ -18,7 +18,13 @@ runs:
       if: inputs.package-manager == 'pnpm'
       id: pnpm-build-cache
       with:
-        path: ./*
+        path: |
+          packages/docs/*/dist
+          packages/docs/*/tsconfig.tsbuildinfo
+          packages/libs/*/dist
+          packages/libs/*/tsconfig.tsbuildinfo
+          packages/stacks/*/dist
+          packages/stacks/*/tsconfig.tsbuildinfo
         key: build-${{ github.sha }}
 
     - name: "Cache build"

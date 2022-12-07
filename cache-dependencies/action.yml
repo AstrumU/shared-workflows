@@ -14,12 +14,6 @@ inputs:
     required: true
     default: yarn.lock
 outputs:
-  # pnpm-cache-hit:
-  #   description: "A boolean value to indicate an exact match was found for the primary key"
-  #   value: ${{ steps.pnpm-cache.outputs.cache-hit }}
-  # yarn-cache-hit:
-  #   description: "A boolean value to indicate an exact match was found for the primary key"
-  #   value: ${{ steps.yarn-cache.outputs.cache-hit }}
   cache-hit:
     description: "A boolean value to indicate an exact match was found for the primary key"
     value: ${{ steps.cache.outputs.cache-hit }}
@@ -34,9 +28,7 @@ runs:
       with:
         path: |
           node_modules
-          packages/docs/*/node_modules
-          packages/libs/*/node_modules
-          packages/stacks/*/node_modules
+          packages/**/node_modules
         key: ${{ runner.os }}-${{ inputs.package-manager }}-${{ inputs.cache-version }}-${{ hashFiles(format('{0}', inputs.lock-file)) }}
 
     - name: "Cache dependencies"

@@ -47,12 +47,6 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.node-options }}
 
-      # - name: Get lockfile
-      #   uses: AstrumU/shared-workflows/get-lockfile@feature/KAN-240
-      #   id: lock-file
-      #   with:
-      #     package-manager: ${{ inputs.package-manager }}
-
       - name: Cache dependencies
         uses: AstrumU/shared-workflows/cache-dependencies@feature/KAN-240
         if: inputs.package-manager == 'yarn'
@@ -61,7 +55,6 @@ jobs:
           package-manager: ${{ inputs.package-manager }}
           cache-version: ${{ inputs.cache-version }}
           lock-file: ${{ inputs.lock-file }}
-          # lock-file: ${{ steps.lock-file.outputs.lock-file }}
 
       - name: Cache build
         uses: AstrumU/shared-workflows/cache-build@feature/KAN-240
