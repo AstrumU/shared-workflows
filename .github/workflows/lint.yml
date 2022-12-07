@@ -46,8 +46,6 @@ jobs:
 
       - name: Cache dependencies
         uses: AstrumU/shared-workflows/cache-dependencies@feature/KAN-240
-        if: inputs.package-manager == 'yarn'
-        id: cache-dependencies
         with:
           package-manager: ${{ inputs.package-manager }}
           cache-version: ${{ inputs.cache-version }}

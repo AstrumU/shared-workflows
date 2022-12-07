@@ -1,0 +1,15 @@
+name: 'Get artifacts path'
+description: 'Get workspaces path and return path for cache saving'
+author: 'AstrumU'
+inputs:
+  package-manager:
+    description: "Package Manager"
+    required: true
+outputs:
+  dependency-cache-path:
+    description: 'Dependencies path'
+  build-cache-path:
+    description: 'Build artifacts path'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

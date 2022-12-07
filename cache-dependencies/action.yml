@@ -21,32 +21,16 @@ outputs:
 runs:
   using: composite
   steps:
-    - name: "Cache dependencies"
-      uses: actions/cache@v3
-      id: pnpm-cache
-      if: inputs.package-manager == 'pnpm'
+    - name: "Get cache path"
+      uses: AstrumU/shared-workflows/.github/actions/get-workspace@feature/KAN-240
+      id: cache-path
       with:
-        path: |
-          node_modules
-          packages/**/node_modules
-        key: ${{ runner.os }}-${{ inputs.package-manager }}-${{ inputs.cache-version }}-${{ hashFiles(format('{0}', inputs.lock-file)) }}
+        package-manager: ${{ inputs.package-manager }}
 
     - name: "Cache dependencies"
       uses: actions/cache@v3
-      id: yarn-cache
-      if: inputs.package-manager == 'yarn'
-      with:
-        path: |
-          node_modules
-          packages/**/node_modules
-        key: ${{ runner.os }}-${{ inputs.package-manager }}-${{ inputs.cache-version }}-${{ hashFiles(format('{0}', inputs.lock-file)) }}
-
-    - name: Get cache id
       id: cache
-      shell: bash
-      run: |
-        if [ ${{ inputs.package-manager }} == 'yarn' ]; then 
-          echo "cache-hit=${{ steps.yarn-cache.outputs.cache-hit }}" >> $GITHUB_OUTPUT
-        else
-          echo "cache-hit=${{ steps.pnpm-cache.outputs.cache-hit }}" >> $GITHUB_OUTPUT
-        fi
+      with:
+        path: |
+          ${{ steps.cache-path.outputs.dependency-cache-path }}
+        key: ${{ runner.os }}-${{ inputs.package-manager }}-${{ inputs.cache-version }}-${{ hashFiles(format('{0}', inputs.lock-file)) }}
