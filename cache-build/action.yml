@@ -6,25 +6,13 @@ inputs:
     required: false
     default: yarn
 outputs:
-  pnpm-build-cache-hit:
-    description: 'A boolean value to indicate an exact match was found for the primary key'
-    value: ${{ steps.pnpm-build-cache.outputs.cache-hit }}
-  yarn-build-cache-hit:
-    description: 'A boolean value to indicate an exact match was found for the primary key'
-    value: ${{ steps.yarn-build-cache.outputs.cache-hit }}
+  cache-hit:
+    description: "A boolean value to indicate an exact match was found for the primary key"
+    value: ${{ steps.cache.outputs.cache-hit }}
+
 runs:
   using: composite
   steps:
-    # - name: "Get lockfile"
-    #   id: get-lockfile
-    #   shell: bash
-    #   run: |
-    #     if [ ${{ inputs.package-manager }} == 'yarn' ]; then 
-    #       echo "lock-file=yarn.lock" >> $GITHUB_OUTPUT
-    #     else
-    #       echo "lock-file=pnpm-lock.yaml" >> $GITHUB_OUTPUT
-    #     fi
-
     - name: "Cache build"
       uses: actions/cache@v3
       if: inputs.package-manager == 'pnpm'
@@ -32,7 +20,7 @@ runs:
       with:
         path: ./*
         key: build-${{ github.sha }}
-     
+
     - name: "Cache build"
       uses: actions/cache@v3
       if: inputs.package-manager == 'yarn'
@@ -42,3 +30,13 @@ runs:
           packages/**/dist
           packages/**/tsconfig.tsbuildinfo
         key: build-${{ github.sha }}
+
+    - name: Get cache id
+      id: cache
+      shell: bash
+      run: |
+        if [ ${{ inputs.package-manager }} == 'yarn' ]; then 
+          echo "cache-hit=${{ steps.yarn-build-cache.outputs.cache-hit }}" >> $GITHUB_OUTPUT
+        else
+          echo "cache-hit=${{ steps.pnpm-build-cache.outputs.cache-hit }}" >> $GITHUB_OUTPUT
+        fi

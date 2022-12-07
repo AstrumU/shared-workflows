@@ -5,6 +5,7 @@ inputs:
     description: "Package Manager"
     required: false
     default: yarn
+
 runs:
   using: composite
   steps:

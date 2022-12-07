@@ -25,10 +25,6 @@ on:
         type: string
         required: false
         default: "yarn.lock"
-      # build-cache-hit:
-      #   type: string
-      #   required: false
-      #   default: "pnpm-build-cache-hit"
     secrets:
       NODE_AUTH_TOKEN:
         required: true
@@ -38,18 +34,8 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: "Get cache-hit"
-        id: get-cache-hit
-        shell: bash
-        run: |
-          if [ ${{ inputs.package-manager }} == 'yarn' ]; then 
-            echo "cache-hit=steps.cache-build.outputs.yarn-build-cache-hit" >> $GITHUB_OUTPUT
-          else
-            echo "cache-hit=steps.cache-build.outputs.pnpm-build-cache-hit" >> $GITHUB_OUTPUT
-          fi
-
       - name: Setup env
-        uses: AstrumU/shared-workflows/setup@feature/KAN-240
+        uses: AstrumU/shared-workflows/setup@feature/testing-changes
         with:
           node-version-file: ${{ inputs.node-version-file }}
           package-manager: ${{ inputs.package-manager }}
@@ -59,7 +45,7 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Cache dependencies
-        uses: AstrumU/shared-workflows/cache-dependencies@feature/KAN-240
+        uses: AstrumU/shared-workflows/cache-dependencies@feature/testing-changes
         id: cache-dependencies
         with:
           package-manager: ${{ inputs.package-manager }}
@@ -68,12 +54,12 @@ jobs:
 
       - name: Cache build
         id: cache-build
-        uses: AstrumU/shared-workflows/cache-build@feature/KAN-240
+        uses: AstrumU/shared-workflows/cache-build@feature/testing-changes
         with:
           package-manager: ${{ inputs.package-manager }}
 
       - name: Build
-        if: ${{ steps.get-cache-hit.outputs.cache-hit != 'true' }}
+        if: ${{ steps.cache-build.outputs.cache-hit != 'true' }}
         run: ${{ inputs.package-manager }} build:ts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}

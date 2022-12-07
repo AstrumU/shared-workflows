@@ -14,12 +14,15 @@ inputs:
     required: true
     default: yarn.lock
 outputs:
-  pnpm-cache-hit:
-    description: 'A boolean value to indicate an exact match was found for the primary key'
-    value: ${{ steps.pnpm-cache.outputs.cache-hit }}
-  yarn-cache-hit:
-    description: 'A boolean value to indicate an exact match was found for the primary key'
-    value: ${{ steps.yarn-cache.outputs.cache-hit }}
+  # pnpm-cache-hit:
+  #   description: "A boolean value to indicate an exact match was found for the primary key"
+  #   value: ${{ steps.pnpm-cache.outputs.cache-hit }}
+  # yarn-cache-hit:
+  #   description: "A boolean value to indicate an exact match was found for the primary key"
+  #   value: ${{ steps.yarn-cache.outputs.cache-hit }}
+  cache-hit:
+    description: "A boolean value to indicate an exact match was found for the primary key"
+    value: ${{ steps.cache.outputs.cache-hit }}
 
 runs:
   using: composite
@@ -42,6 +45,16 @@ runs:
       if: inputs.package-manager == 'yarn'
       with:
         path: |
-            node_modules
-            packages/**/node_modules
+          node_modules
+          packages/**/node_modules
         key: ${{ runner.os }}-${{ inputs.package-manager }}-${{ inputs.cache-version }}-${{ hashFiles(format('{0}', inputs.lock-file)) }}
+
+    - name: Get cache id
+      id: cache
+      shell: bash
+      run: |
+        if [ ${{ inputs.package-manager }} == 'yarn' ]; then 
+          echo "cache-hit=${{ steps.yarn-cache.outputs.cache-hit }}" >> $GITHUB_OUTPUT
+        else
+          echo "cache-hit=${{ steps.pnpm-cache.outputs.cache-hit }}" >> $GITHUB_OUTPUT
+        fi
