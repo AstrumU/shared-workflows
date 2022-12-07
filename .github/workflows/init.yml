@@ -1,0 +1,49 @@
+on:
+  workflow_call:
+    inputs:
+      package-manager:
+        type: string
+        required: false
+        default: yarn
+      cache-version:
+        type: string
+        required: false
+        default: v1
+    outputs:
+      package-manager:
+        description: "Name of package manager"
+        value: ${{ jobs.init.outputs.package-manager }}
+      cache-version:
+        description: "Cache version"
+        value: ${{ jobs.init.outputs.cache-version }}
+      lock-file:
+        description: "Name of lock file"
+        value: ${{ jobs.init.outputs.lock-file }}
+
+jobs:
+  init:
+    name: Init
+    runs-on: self-hosted
+
+    outputs:
+      package-manager: ${{ steps.package-manager.outputs.package-manager }}
+      cache-version: ${{ steps.cache-version.outputs.cache-version }}
+      lock-file: ${{ steps.lock-file.outputs.lock-file }}
+    steps:
+
+      - name: "Init package manager"
+        id: package-manager
+        run: echo "package-manager=${{ inputs.package-manager }}" >> $GITHUB_OUTPUT
+
+      - name: "Init cache version"
+        id: cache-version
+        run: echo "cache-version=${{ inputs.cache-version }}" >> $GITHUB_OUTPUT
+
+      - name: "Get lockfile"
+        id: lock-file
+        run: |
+          if [ ${{ inputs.package-manager }} == 'yarn' ]; then 
+            echo "lock-file=yarn.lock" >> $GITHUB_OUTPUT
+          else
+            echo "lock-file=pnpm-lock.yaml" >> $GITHUB_OUTPUT
+          fi

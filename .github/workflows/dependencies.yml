@@ -25,20 +25,22 @@ on:
         type: string
         required: false
         default: "yarn.lock"
-      app-layer:
+      args:
         type: string
-        required: true
+        description: Additional flags to pass to the install command.
+        default: "--frozen-lockfile"
+        required: false
     secrets:
       NODE_AUTH_TOKEN:
         required: true
 
 jobs:
-  test-unit:
+  dependencies:
     runs-on: self-hosted
 
     steps:
-      - uses: AstrumU/shared-workflows/setup@feature/KAN-240
-        name: Setup env
+      - name: Setup env
+        uses: AstrumU/shared-workflows/setup@feature/KAN-240
         with:
           node-version-file: ${{ inputs.node-version-file }}
           package-manager: ${{ inputs.package-manager }}
@@ -49,20 +51,15 @@ jobs:
 
       - name: Cache dependencies
         uses: AstrumU/shared-workflows/cache-dependencies@feature/KAN-240
-        if: inputs.package-manager == 'yarn'
         id: cache-dependencies
         with:
           package-manager: ${{ inputs.package-manager }}
           cache-version: ${{ inputs.cache-version }}
           lock-file: ${{ inputs.lock-file }}
 
-      - name: Cache build
-        uses: AstrumU/shared-workflows/cache-build@feature/KAN-240
-        with:
-          package-manager: ${{ inputs.package-manager }}
-
-      - name: Unit tests ${{ inputs.app-layer }}
-        run: ${{ inputs.package-manager }} test:unit:${{ inputs.app-layer }} --ci
+      - name: Dependencies
+        if: ${{ steps.cache-dependencies.outputs.inputs.package-manager-cache-hit != 'true' }}
+        run: ${{ inputs.package-manager }} install ${{ inputs.args }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.node-options }}

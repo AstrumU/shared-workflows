@@ -1,0 +1,47 @@
+name: "Cache dependencies"
+description: "Cache node_modules"
+inputs:
+  package-manager:
+    description: "Package Manager"
+    required: false
+    default: yarn
+  cache-version:
+    description: "Cache version"
+    required: false
+    default: v1
+  lock-file:
+    description: "Lockfile name"
+    required: true
+    default: yarn.lock
+outputs:
+  pnpm-cache-hit:
+    description: 'A boolean value to indicate an exact match was found for the primary key'
+    value: ${{ steps.pnpm-cache.outputs.cache-hit }}
+  yarn-cache-hit:
+    description: 'A boolean value to indicate an exact match was found for the primary key'
+    value: ${{ steps.yarn-cache.outputs.cache-hit }}
+
+runs:
+  using: composite
+  steps:
+    - name: "Cache dependencies"
+      uses: actions/cache@v3
+      id: pnpm-cache
+      if: inputs.package-manager == 'pnpm'
+      with:
+        path: |
+          node_modules
+          packages/docs/*/node_modules
+          packages/libs/*/node_modules
+          packages/stacks/*/node_modules
+        key: ${{ runner.os }}-${{ inputs.package-manager }}-${{ inputs.cache-version }}-${{ hashFiles(format('{0}', inputs.lock-file)) }}
+
+    - name: "Cache dependencies"
+      uses: actions/cache@v3
+      id: yarn-cache
+      if: inputs.package-manager == 'yarn'
+      with:
+        path: |
+            node_modules
+            packages/**/node_modules
+        key: ${{ runner.os }}-${{ inputs.package-manager }}-${{ inputs.cache-version }}-${{ hashFiles(format('{0}', inputs.lock-file)) }}
