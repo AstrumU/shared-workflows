@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: Setup env
-        uses: AstrumU/shared-workflows/setup@feature/testing-changes
+        uses: AstrumU/shared-workflows/setup@feature/KAN-240
         with:
           node-version-file: ${{ inputs.node-version-file }}
           package-manager: ${{ inputs.package-manager }}
@@ -45,7 +45,7 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Cache dependencies
-        uses: AstrumU/shared-workflows/cache-dependencies@feature/testing-changes
+        uses: AstrumU/shared-workflows/cache-dependencies@feature/KAN-240
         id: cache-dependencies
         with:
           package-manager: ${{ inputs.package-manager }}
@@ -54,7 +54,7 @@ jobs:
 
       - name: Cache build
         id: cache-build
-        uses: AstrumU/shared-workflows/cache-build@feature/testing-changes
+        uses: AstrumU/shared-workflows/cache-build@feature/KAN-240
         with:
           package-manager: ${{ inputs.package-manager }}
 
