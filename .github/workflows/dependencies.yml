@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: Setup env
-        uses: ./.github/actions/setup/action.yml
+        uses: ./.github/actions/setup
         with:
           node-version-file: ${{ inputs.node-version-file }}
           package-manager: ${{ inputs.package-manager }}
@@ -50,7 +50,7 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Cache dependencies
-        uses: ./.github/actions/cache-dependencies/action.yml
+        uses: ./.github/actions/cache-dependencies
         id: cache-dependencies
         with:
           package-manager: ${{ inputs.package-manager }}
