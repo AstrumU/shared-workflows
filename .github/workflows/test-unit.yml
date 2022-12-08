@@ -38,7 +38,7 @@ jobs:
 
     steps:
       - name: Setup env
-        uses: AstrumU/shared-workflows/setup@main
+        uses: ./.github/actions/setup/action.yml
         with:
           node-version-file: ${{ inputs.node-version-file }}
           package-manager: ${{ inputs.package-manager }}
@@ -48,7 +48,7 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Cache dependencies
-        uses: AstrumU/shared-workflows/cache-dependencies@main
+        uses: ./.github/actions/cache-dependencies/action.yml
         with:
           package-manager: ${{ inputs.package-manager }}
           cache-version: ${{ inputs.cache-version }}
