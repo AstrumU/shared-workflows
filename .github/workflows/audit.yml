@@ -27,7 +27,7 @@ jobs:
 
     steps:
       - name: Setup env
-        uses: ./.github/actions/setup/action.yml
+        uses: AstrumU/shared-workflows/.github/actions/setup@feature/KAN-240
         with:
           node-version-file: ${{ inputs.node-version-file }}
           package-manager: ${{ inputs.package-manager }}
@@ -37,7 +37,7 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Auditing
-        uses: ./.github/actions/audit/action.yml
+        uses: AstrumU/shared-workflows/.github/actions/audit@feature/KAN-240
         with:
           package-manager: ${{ inputs.package-manager }}
         env:
