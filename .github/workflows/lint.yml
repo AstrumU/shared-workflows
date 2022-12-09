@@ -35,7 +35,7 @@ jobs:
 
     steps:
       - name: Setup env
-        uses: AstrumU/shared-workflows/.github/actions/setup@main
+        uses: AstrumU/shared-workflows/.github/actions/setup@feature/KAN-256
         with:
           node-version-file: ${{ inputs.node-version-file }}
           package-manager: ${{ inputs.package-manager }}
@@ -45,14 +45,14 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Cache dependencies
-        uses: AstrumU/shared-workflows/.github/actions/cache-dependencies@main
+        uses: AstrumU/shared-workflows/.github/actions/cache-dependencies@feature/KAN-256
         with:
           package-manager: ${{ inputs.package-manager }}
           cache-version: ${{ inputs.cache-version }}
           lock-file: ${{ inputs.lock-file }}
 
       - name: Cache build
-        uses: AstrumU/shared-workflows/.github/actions/cache-build@main
+        uses: AstrumU/shared-workflows/.github/actions/cache-build@feature/KAN-256
         with:
           package-manager: ${{ inputs.package-manager }}
 
