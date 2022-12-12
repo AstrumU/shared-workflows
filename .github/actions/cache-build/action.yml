@@ -1,0 +1,27 @@
+name: "Cache build"
+description: "Cache build artifacts"
+inputs:
+  package-manager:
+    description: "Package Manager"
+    required: false
+    default: yarn
+outputs:
+  cache-hit:
+    description: "A boolean value to indicate an exact match was found for the primary key"
+    value: ${{ steps.cache.outputs.cache-hit }}
+runs:
+  using: composite
+  steps:
+    - name: "Get cache path"
+      uses: AstrumU/shared-workflows/.github/actions/get-workspace@main
+      id: cache-path
+      with:
+        package-manager: ${{ inputs.package-manager }}
+
+    - name: "Cache build"
+      uses: actions/cache@v3
+      id: cache
+      with:
+        path: |
+          ${{ steps.cache-path.outputs.build-cache-path }}
+        key: build-${{ github.sha }}

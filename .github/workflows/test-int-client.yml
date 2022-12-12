@@ -1,29 +1,33 @@
 on:
   workflow_call:
     inputs:
-      nodeVersion:
+      node-version-file:
         required: false
         type: string
         default: ".nvmrc"
-      name:
-        required: false
-        type: string
-      packageManager:
+      package-manager:
         type: string
         required: false
         default: yarn
-      cacheVersion:
+      cache-version:
         type: string
-        required: true
+        required: false
         default: v1
-      pnpmVersion:
+      pnpm-version:
         type: string
         required: false
         default: 7
-      nodeOptions:
+      node-options:
         type: string
         required: false
         default: "--max_old_space_size=8192"
+      lock-file:
+        type: string
+        required: false
+        default: "yarn.lock"
+      client:
+        type: string
+        required: true
     secrets:
       NODE_AUTH_TOKEN:
         required: true
@@ -31,71 +35,60 @@ on:
 jobs:
   test-int-client:
     runs-on: self-hosted
-    strategy:
-      fail-fast: false
-      matrix:
-        client:
-          - skillset
-          - toolkit-mba
-
-    name: test-int-client-${{ matrix.client }}
 
     steps:
-      - uses: AstrumU/shared-workflows/setup@main
-        name: Setup env
+      - name: Setup env
+        uses: AstrumU/shared-workflows/.github/actions/setup@main
         with:
-          nodeVersion: ${{ inputs.nodeVersion }}
-          packageManager: ${{ inputs.packageManager }}
-          cacheVersion: ${{ inputs.cacheVersion }}
-          pnpmVersion: ${{ inputs.pnpmVersion }}
+          node-version-file: ${{ inputs.node-version-file }}
+          package-manager: ${{ inputs.package-manager }}
+          pnpm-version: ${{ inputs.pnpm-version }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+          NODE_OPTIONS: ${{ inputs.node-options }}
 
-      - name: Install dependencies
-        uses: AstrumU/shared-workflows/dependencies@main
+      - name: Cache dependencies
+        uses: AstrumU/shared-workflows/.github/actions/cache-dependencies@main
         with:
-          packageManager: ${{ inputs.packageManager }}
-          cacheVersion: ${{ inputs.cacheVersion }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+          package-manager: ${{ inputs.package-manager }}
+          cache-version: ${{ inputs.cache-version }}
+          lock-file: ${{ inputs.lock-file }}
+
+      - name: Cache build
+        uses: AstrumU/shared-workflows/.github/actions/cache-build@main
+        with:
+          package-manager: ${{ inputs.package-manager }}
 
       - name: Setup kernel for node native, increase watchers
-        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+        run: |
+          echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && \
+            sudo sysctl -p
 
       - name: Install system packs
         run: |
           sudo apt update
-          sudo apt install -y libgtk2.0-0 libgtk-3-0 libgbm-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xvfb
-
-      - uses: actions/cache@v3
-        id: build-cache
-        name: Cache
-        with:
-          path: |
-            packages/**/dist
-            packages/**/tsconfig.tsbuildinfo
-          key: ${{ github.sha }}
+          sudo apt install -y libgtk2.0-0 libgtk-3-0 \
+            libgbm-dev libgconf-2-4 libnss3 libxss1 \
+            libasound2 libxtst6 xvfb
 
       - name: Install & verify Cypress
         run: |
-          yarn cypress install
-          yarn cypress verify
-          yarn cypress info
-          yarn cypress version
+          ${{ inputs.package-manager }} cypress install
+          ${{ inputs.package-manager }} cypress verify
+          ${{ inputs.package-manager }} cypress info
+          ${{ inputs.package-manager }} cypress version
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           CI: 1
 
-      - name: Test ${{ matrix.client }} client
+      - name: Test ${{ inputs.client }} client
         uses: cypress-io/github-action@v2
         with:
           install: false
-          command: yarn test:int:client:${{ matrix.client }}
+          command: ${{ inputs.package-manager }} test:int:client:${{ inputs.client }}
           cache-key: cypress-${{ github.sha }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+          NODE_OPTIONS: ${{ inputs.node-options }}
           CYPRESS_defaultCommandTimeout: 8000
           TERM: xterm

@@ -1,0 +1,50 @@
+name: "Configure Environment"
+description: "Shared configuration for checkout, NodeJS and package manager"
+inputs:
+  node-version-file:
+    description: "File containing the version Spec of the version to use"
+    required: false
+    default: ".nvmrc"
+  package-manager:
+    description: "Package manager"
+    required: false
+    default: yarn
+  pnpm-version:
+    description: "PNPM manager version"
+    required: false
+    default: "7"
+
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        ref: ${{ github.event.workflow_run.head_branch }}
+
+    - name: Setup pnpm
+      if: inputs.package-manager == 'pnpm'
+      uses: pnpm/action-setup@v2.2.4
+      with:
+        version: ${{ inputs.pnpm-version }}
+        run_install: false
+
+    - name: Setup node
+      uses: actions/setup-node@v3
+      if: inputs.package-manager == 'pnpm'
+      with:
+        node-version-file: ${{ inputs.node-version-file }}
+        cache: ${{ inputs.package-manager }}
+
+    - name: Setup node
+      uses: actions/setup-node@v3
+      if: inputs.package-manager == 'yarn'
+      with:
+        node-version-file: ${{ inputs.node-version-file }}
+
+    - name: Setup yarn
+      if: inputs.package-manager == 'yarn'
+      shell: bash
+      run: npm i --location=global yarn

@@ -1,22 +1,19 @@
 on:
   workflow_call:
     inputs:
-      nodeVersion:
+      node-version-file:
         required: false
         type: string
         default: ".nvmrc"
-      name:
-        required: false
-        type: string
-      packageManager:
+      package-manager:
         type: string
         required: false
         default: yarn
-      pnpmVersion:
+      pnpm-version:
         type: string
         required: false
         default: 7
-      nodeOptions:
+      node-options:
         type: string
         required: false
         default: "--max_old_space_size=8192"
@@ -29,26 +26,20 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - uses: AstrumU/shared-workflows/setup@main
-        name: Setup env
+      - name: Setup env
+        uses: AstrumU/shared-workflows/.github/actions/setup@main
         with:
-          nodeVersion: ${{ inputs.nodeVersion }}
-          packageManager: ${{ inputs.packageManager }}
-          pnpmVersion: ${{ inputs.pnpmVersion }}
+          node-version-file: ${{ inputs.node-version-file }}
+          package-manager: ${{ inputs.package-manager }}
+          pnpm-version: ${{ inputs.pnpm-version }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+          NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Auditing
-        if: inputs.packageManager == 'pnpm'
-        uses: AstrumU/shared-workflows/audit-pnpm@main
+        uses: AstrumU/shared-workflows/.github/actions/audit@main
+        with:
+          package-manager: ${{ inputs.package-manager }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
-
-      - name: Auditing
-        if: inputs.packageManager == 'yarn'
-        uses: AstrumU/shared-workflows/audit-yarn@main
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          NODE_OPTIONS: ${{ inputs.nodeOptions }}
+          NODE_OPTIONS: ${{ inputs.node-options }}
