@@ -82,7 +82,7 @@ jobs:
       - name: Slack notify
         # if: ${{ failure() && steps.dependencies.conclusion == 'failure' }}
         # if: ${{ failure() && steps.dependencies.conclusion == 'failure' && inputs.slack-notify == 'true' }}
-        if: failure() && (steps.dependencies.outcome == 'failure' || inputs.slack-notify == 'true')
+        if: failure() && (steps.dependencies.conclusion == 'failure' && inputs.slack-notify == 'true')
         # if: ${{ inputs.slack-notify == 'true' && steps.dependencies.result == 'failure' }}
         uses: AstrumU/shared-workflows/.github/actions/slack-notify@feature/KAN-259
         with:
