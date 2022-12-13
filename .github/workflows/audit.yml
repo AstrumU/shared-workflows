@@ -17,10 +17,6 @@ on:
         type: string
         required: false
         default: "--max_old_space_size=8192"
-      # job:
-      #   type: string
-      #   required: false
-      #   default: ${{ github.job }}
       slack-notify:
         type: boolean
         required: false
@@ -61,10 +57,9 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Slack notify
-        if: ${{ inputs.slack-notify == 'true' && steps.audit.conclusion == 'failure' }}
+        if: failure() && (steps.audit.conclusion == 'failure' || inputs.slack-notify == 'true')
         uses: AstrumU/shared-workflows/.github/actions/slack-notify@feature/KAN-259
         with:
-          job: ${{ github.job }}
           chanel-id: ${{ inputs.chanel-id }}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
