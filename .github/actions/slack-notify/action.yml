@@ -14,14 +14,27 @@ runs:
         channel-id: ${{ inputs.chanel-id }}
         payload: |
           {
-            "text": "error while trying to run ${{ github.job }} job in the workflow",
+            "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}",
             "blocks": [
               {
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": ":x::x::x:\nThere has been error in workflow.\nFull report information can be found here:\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                  "text": "GitHub Action build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
                 }
               }
             ]
           }
+        # payload: |
+        #   {
+        #     "text": "error while trying to run ${{ github.job }} job in the workflow",
+        #     "blocks": [
+        #       {
+        #         "type": "section",
+        #         "text": {
+        #           "type": "mrkdwn",
+        #           "text": ":x::x::x:\nThere has been error in workflow.\nFull report information can be found here:\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        #         }
+        #       }
+        #     ]
+        #   }
