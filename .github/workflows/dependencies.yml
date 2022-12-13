@@ -45,7 +45,7 @@ on:
     secrets:
       NODE_AUTH_TOKEN:
         required: true
-      SLACK_SMOKE_TESTS_BOT_TOKEN:
+      SLACK_BOT_TOKEN:
         required: false
 
 jobs:
@@ -89,4 +89,4 @@ jobs:
           # job: ${{ github.job }}
           chanel-id: ${{ inputs.chanel-id }}
         env:
-          SLACK_SMOKE_TESTS_BOT_TOKEN: ${{ secrets.SLACK_SMOKE_TESTS_BOT_TOKEN }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_SMOKE_TESTS_BOT_TOKEN }}
