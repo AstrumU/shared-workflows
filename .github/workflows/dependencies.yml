@@ -34,10 +34,10 @@ on:
       #   type: string
       #   required: false
       #   default: ${{ github.job }}
-      slack-notify:
-        type: boolean
-        required: false
-        default: false
+      # slack-notify:
+      #   type: boolean
+      #   required: false
+      #   default: false
       chanel-id:
         type: string
         required: false
