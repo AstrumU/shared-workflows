@@ -45,7 +45,7 @@ on:
     secrets:
       NODE_AUTH_TOKEN:
         required: true
-      SLACK_BOT_TOKEN:
+      SLACK_SMOKE_TESTS_BOT_TOKEN:
         required: false
 
 jobs:
