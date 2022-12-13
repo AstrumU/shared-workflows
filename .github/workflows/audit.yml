@@ -17,9 +17,24 @@ on:
         type: string
         required: false
         default: "--max_old_space_size=8192"
+      # job:
+      #   type: string
+      #   required: false
+      #   default: ${{ github.job }}
+      slack-notify:
+        type: boolean
+        required: false
+        default: false
+      chanel-id:
+        type: string
+        required: false
+        default: "smoke-test-notifications"
+
     secrets:
       NODE_AUTH_TOKEN:
         required: true
+      SLACK_BOT_TOKEN:
+        required: false
 
 jobs:
   audit:
@@ -27,7 +42,7 @@ jobs:
 
     steps:
       - name: Setup env
-        uses: AstrumU/shared-workflows/.github/actions/setup@main
+        uses: AstrumU/shared-workflows/.github/actions/setup@feature/KAN-259
         with:
           node-version-file: ${{ inputs.node-version-file }}
           package-manager: ${{ inputs.package-manager }}
@@ -37,9 +52,19 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Auditing
-        uses: AstrumU/shared-workflows/.github/actions/audit@main
+        id: audit
+        uses: AstrumU/shared-workflows/.github/actions/audit@feature/KAN-259
         with:
           package-manager: ${{ inputs.package-manager }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.node-options }}
+
+      - name: Slack notify
+        if: ${{ inputs.slack-notify == 'true' && steps.audit.conclusion == 'failure' }}
+        uses: AstrumU/shared-workflows/.github/actions/slack-notify@feature/KAN-259
+        with:
+          job: ${{ github.job }}
+          chanel-id: ${{ inputs.chanel-id }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

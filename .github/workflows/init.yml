@@ -9,6 +9,18 @@ on:
         type: string
         required: false
         default: v1
+      # job:
+      #   type: string
+      #   required: false
+      #   default: ${{ github.job }}
+      slack-notify:
+        type: boolean
+        required: false
+        default: false
+      chanel-id:
+        type: string
+        required: false
+        default: "smoke-test-notifications"
     outputs:
       package-manager:
         description: "Name of package manager"
@@ -30,7 +42,6 @@ jobs:
       cache-version: ${{ steps.cache-version.outputs.cache-version }}
       lock-file: ${{ steps.lock-file.outputs.lock-file }}
     steps:
-
       - name: "Init package manager"
         id: package-manager
         run: echo "package-manager=${{ inputs.package-manager }}" >> $GITHUB_OUTPUT

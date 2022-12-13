@@ -1,0 +1,30 @@
+name: "Slack notify"
+description: "Send Slack notification about an job event"
+inputs:
+  # job:
+  #   description: "Failed job or step"
+  #   required: true
+  chanel-id:
+    description: "Notification channel"
+    required: true
+    default: "smoke-test-notifications"
+runs:
+  using: composite
+  steps:
+    - name: Post github run link to the Slack channel on run error
+      uses: slackapi/slack-github-action@v1.23.0
+      with:
+        channel-id: ${{ inputs.chanel-id }}
+        payload: |
+          {
+            "text": ":x: smoke test: error while trying to run ${{ github.job }} job in the workflow",
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": ":x::x::x:\nThere has been error in the Smoke tests workflow.\nFull report information can be found here:\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                }
+              }
+            ]
+          }

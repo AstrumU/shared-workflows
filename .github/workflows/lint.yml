@@ -25,9 +25,23 @@ on:
         type: string
         required: false
         default: "yarn.lock"
+      # job:
+      #   type: string
+      #   required: false
+      #   default: ${{ github.job }}
+      slack-notify:
+        type: boolean
+        required: false
+        default: false
+      chanel-id:
+        type: string
+        required: false
+        default: "smoke-test-notifications"
     secrets:
       NODE_AUTH_TOKEN:
         required: true
+      SLACK_BOT_TOKEN:
+        required: false
 
 jobs:
   lint:
@@ -35,7 +49,7 @@ jobs:
 
     steps:
       - name: Setup env
-        uses: AstrumU/shared-workflows/.github/actions/setup@main
+        uses: AstrumU/shared-workflows/.github/actions/setup@feature/KAN-259
         with:
           node-version-file: ${{ inputs.node-version-file }}
           package-manager: ${{ inputs.package-manager }}
@@ -45,19 +59,29 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Cache dependencies
-        uses: AstrumU/shared-workflows/.github/actions/cache-dependencies@main
+        uses: AstrumU/shared-workflows/.github/actions/cache-dependencies@feature/KAN-259
         with:
           package-manager: ${{ inputs.package-manager }}
           cache-version: ${{ inputs.cache-version }}
           lock-file: ${{ inputs.lock-file }}
 
       - name: Cache build
-        uses: AstrumU/shared-workflows/.github/actions/cache-build@main
+        uses: AstrumU/shared-workflows/.github/actions/cache-build@feature/KAN-259
         with:
           package-manager: ${{ inputs.package-manager }}
 
       - name: Lint
+        id: lint
         run: ${{ inputs.package-manager }} lint
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{inputs.node-options}}
+
+      - name: Slack notify
+        if: ${{ inputs.slack-notify == 'true' && steps.lint.conclusion == 'failure' }}
+        uses: AstrumU/shared-workflows/.github/actions/slack-notify@feature/KAN-259
+        with:
+          job: ${{ github.job }}
+          chanel-id: ${{ inputs.chanel-id }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

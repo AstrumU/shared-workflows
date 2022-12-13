@@ -28,9 +28,23 @@ on:
       client:
         type: string
         required: true
+      # job:
+      #   type: string
+      #   required: false
+      #   default: ${{ github.job }}
+      slack-notify:
+        type: boolean
+        required: false
+        default: false
+      chanel-id:
+        type: string
+        required: false
+        default: "smoke-test-notifications"
     secrets:
       NODE_AUTH_TOKEN:
         required: true
+      SLACK_BOT_TOKEN:
+        required: false
 
 jobs:
   test-int-client:
@@ -38,7 +52,7 @@ jobs:
 
     steps:
       - name: Setup env
-        uses: AstrumU/shared-workflows/.github/actions/setup@main
+        uses: AstrumU/shared-workflows/.github/actions/setup@feature/KAN-259
         with:
           node-version-file: ${{ inputs.node-version-file }}
           package-manager: ${{ inputs.package-manager }}
@@ -48,14 +62,14 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Cache dependencies
-        uses: AstrumU/shared-workflows/.github/actions/cache-dependencies@main
+        uses: AstrumU/shared-workflows/.github/actions/cache-dependencies@feature/KAN-259
         with:
           package-manager: ${{ inputs.package-manager }}
           cache-version: ${{ inputs.cache-version }}
           lock-file: ${{ inputs.lock-file }}
 
       - name: Cache build
-        uses: AstrumU/shared-workflows/.github/actions/cache-build@main
+        uses: AstrumU/shared-workflows/.github/actions/cache-build@feature/KAN-259
         with:
           package-manager: ${{ inputs.package-manager }}
 
@@ -82,6 +96,7 @@ jobs:
           CI: 1
 
       - name: Test ${{ inputs.client }} client
+        id: test-client
         uses: cypress-io/github-action@v2
         with:
           install: false
@@ -92,3 +107,12 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
           CYPRESS_defaultCommandTimeout: 8000
           TERM: xterm
+
+      - name: Slack notify
+        if: ${{ inputs.slack-notify == 'true' && steps.test-client.conclusion == 'failure' }}
+        uses: AstrumU/shared-workflows/.github/actions/slack-notify@feature/KAN-259
+        with:
+          job: ${{ github.job }}
+          chanel-id: ${{ inputs.chanel-id }}
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
