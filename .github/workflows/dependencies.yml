@@ -80,7 +80,7 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Slack notify
-        if: ${{ inputs.slack-notify == 'true' && failure() && steps.dependencies.conclusion == 'failure' }}
+        if: ${{ failure() && inputs.slack-notify == 'true' && steps.dependencies.conclusion == 'failure' }}
         # if: ${{ inputs.slack-notify == 'true' && steps.dependencies.result == 'failure' }}
         uses: AstrumU/shared-workflows/.github/actions/slack-notify@feature/KAN-259
         with:
