@@ -8,10 +8,10 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: yarn audit --groups dependencies --silent; if [[ $? -ge 8 ]]; then yarn audit --groups dependencies --level high; else echo -e "\e[92mAuditing complete\e[0m"; fi
+    - run: /bin/bash -c 'yarn audit --groups dependencies --silent; if [[ $? -ge 8 ]]; then yarn audit --groups dependencies --level high; else echo -e "\e[92mAuditing complete\e[0m"; fi'
       if: inputs.package-manager == 'yarn'
       shell: bash
 
-    - run: pnpm audit --prod --no-optional --audit-level high; if [[ $? -eq 0 ]]; then echo -e "\e[92mAuditing complete\e[0m"; fi
+    - run: /bin/bash -c 'pnpm audit --prod --no-optional --audit-level high; if [[ $? -eq 0 ]]; then echo -e "\e[92mAuditing complete\e[0m"; fi'
       if: inputs.package-manager == 'pnpm'
       shell: bash
