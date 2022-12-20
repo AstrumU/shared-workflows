@@ -104,10 +104,10 @@ jobs:
           CYPRESS_defaultCommandTimeout: 8000
           TERM: xterm
 
-      - name: Slack notify
-        if: failure() && (steps.test-client.conclusion == 'failure' || inputs.slack-notify == 'true')
-        uses: AstrumU/shared-workflows/.github/actions/slack-notify@main
-        with:
-          chanel-id: ${{ inputs.chanel-id }}
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      # - name: Slack notify
+      #   if: failure() && (steps.test-client.conclusion == 'failure' || inputs.slack-notify == 'true')
+      #   uses: AstrumU/shared-workflows/.github/actions/slack-notify@main
+      #   with:
+      #     chanel-id: ${{ inputs.chanel-id }}
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

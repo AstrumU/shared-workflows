@@ -56,10 +56,10 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{ inputs.node-options }}
 
-      - name: Slack notify
-        if: failure() && (steps.audit.conclusion == 'failure' || inputs.slack-notify == 'true')
-        uses: AstrumU/shared-workflows/.github/actions/slack-notify@main
-        with:
-          chanel-id: ${{ inputs.chanel-id }}
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      # - name: Slack notify
+      #   if: failure() && (steps.audit.conclusion == 'failure' || inputs.slack-notify == 'true')
+      #   uses: AstrumU/shared-workflows/.github/actions/slack-notify@main
+      #   with:
+      #     chanel-id: ${{ inputs.chanel-id }}
+      #   env:
+      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
