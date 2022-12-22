@@ -9,14 +9,6 @@ on:
         type: string
         required: false
         default: v1
-      slack-notify:
-        type: boolean
-        required: false
-        default: false
-      chanel-id:
-        type: string
-        required: false
-        default: "smoke-test-notifications"
     outputs:
       package-manager:
         description: "Name of package manager"
