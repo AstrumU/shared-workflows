@@ -70,14 +70,6 @@ jobs:
                 }
             }
 
-            var pr = ""
-            for (p of wf_run.data.pull_requests) {
-              pr += ",<"+ p.url + "|#" + p.number + ">"
-            }
-            if (pr != "") {
-              pr = "for " + pr.substr(1)
-            }
-
             // build the message
             var fields = []
             var is_wf_success = true
