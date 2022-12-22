@@ -25,19 +25,9 @@ on:
         type: string
         required: false
         default: "yarn.lock"
-      slack-notify:
-        type: boolean
-        required: false
-        default: false
-      chanel-id:
-        type: string
-        required: false
-        default: "smoke-test-notifications"
     secrets:
       NODE_AUTH_TOKEN:
         required: true
-      SLACK_BOT_TOKEN:
-        required: false
 
 jobs:
   lint:
@@ -72,11 +62,3 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
           NODE_OPTIONS: ${{inputs.node-options}}
-
-      # - name: Slack notify
-      #   if: failure() && (steps.lint.conclusion == 'failure' || inputs.slack-notify == 'true')
-      #   uses: AstrumU/shared-workflows/.github/actions/slack-notify@feature/KAN-259
-      #   with:
-      #     chanel-id: ${{ inputs.chanel-id }}
-      #   env:
-      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

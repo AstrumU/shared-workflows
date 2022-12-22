@@ -28,19 +28,9 @@ on:
       client:
         type: string
         required: true
-      slack-notify:
-        type: boolean
-        required: false
-        default: false
-      chanel-id:
-        type: string
-        required: false
-        default: "smoke-test-notifications"
     secrets:
       NODE_AUTH_TOKEN:
         required: true
-      SLACK_BOT_TOKEN:
-        required: false
 
 jobs:
   test-int-client:
@@ -103,11 +93,3 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
           CYPRESS_defaultCommandTimeout: 8000
           TERM: xterm
-
-      # - name: Slack notify
-      #   if: failure() && (steps.test-client.conclusion == 'failure' || inputs.slack-notify == 'true')
-      #   uses: AstrumU/shared-workflows/.github/actions/slack-notify@feature/KAN-259
-      #   with:
-      #     chanel-id: ${{ inputs.chanel-id }}
-      #   env:
-      #     SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}

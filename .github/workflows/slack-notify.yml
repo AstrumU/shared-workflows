@@ -21,7 +21,6 @@ jobs:
             ////////////////////////////////////
             // retrieve workflow run data
             ////////////////////////////////////
-
             console.log("get workflow run")
             const wf_run = await github.rest.actions.getWorkflowRun({
                 owner: context.repo.owner,
@@ -31,11 +30,9 @@ jobs:
             console.log(wf_run.data)
             console.log("get jobs for workflow run:", wf_run.data.jobs_url)
             const jobs_response = await github.request(wf_run.data.jobs_url)
-
             ////////////////////////////////////
             // build slack notification message
             ////////////////////////////////////
-
             // some utility functions
             var date_diff_func = function(start, end) {
                 var duration = end - start
@@ -66,9 +63,9 @@ jobs:
                 case "w_cancelled":
                     return ":warning:"
                 case "success":
-                    return "\u2705"
+                    return "\u2713"
                 case "failure":
-                    return "\u274C"
+                    return "\u2717"
                 default:
                     return "\u20e0"
                 }
@@ -89,7 +86,6 @@ jobs:
                     return "\u20e0"
                 }
             }
-
             var pr = ""
             for (p of wf_run.data.pull_requests) {
               pr += ",<"+ p.url + "|#" + p.number + ">"
@@ -97,7 +93,6 @@ jobs:
             if (pr != "") {
               pr = "for " + pr.substr(1)
             }
-
             // build the message
             var fields = []
             var is_wf_success = true
@@ -125,14 +120,13 @@ jobs:
             } else if (is_wf_failure) {
               workflow_status = "w_failure"
             }
-
             var slack_msg = {
                 blocks: [
                     {
                         type: "section",
                         text: {
                             type: "mrkdwn",
-                            text: "<https://github.com/${{ github.repository }}|*${{ github.repository }}*>"
+                            text: "<https://github.com/${{ github.repository }}|*${{ github.repository }}*>\nfrom *${{ github.ref }}*"
                         }
                     },
                     {
