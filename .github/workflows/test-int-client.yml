@@ -82,7 +82,6 @@ jobs:
           CI: 1
 
       - name: Test ${{ inputs.client }} client
-        id: test-client
         uses: cypress-io/github-action@v2
         with:
           install: false

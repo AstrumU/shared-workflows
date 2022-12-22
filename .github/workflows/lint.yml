@@ -57,7 +57,6 @@ jobs:
           package-manager: ${{ inputs.package-manager }}
 
       - name: Lint
-        id: lint
         run: ${{ inputs.package-manager }} lint
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}

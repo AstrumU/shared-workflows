@@ -37,7 +37,6 @@ jobs:
           NODE_OPTIONS: ${{ inputs.node-options }}
 
       - name: Auditing
-        id: audit
         uses: AstrumU/shared-workflows/.github/actions/audit@main
         with:
           package-manager: ${{ inputs.package-manager }}

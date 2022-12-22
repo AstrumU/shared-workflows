@@ -59,7 +59,6 @@ jobs:
           package-manager: ${{ inputs.package-manager }}
 
       - name: Build
-        id: build
         if: ${{ steps.cache-build.outputs.cache-hit != 'true' }}
         run: ${{ inputs.package-manager }} build:ts
         env:

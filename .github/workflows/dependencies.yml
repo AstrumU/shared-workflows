@@ -58,7 +58,6 @@ jobs:
           lock-file: ${{ inputs.lock-file }}
 
       - name: Dependencies
-        id: dependencies
         if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
         run: ${{ inputs.package-manager }} install ${{ inputs.args }}
         env:

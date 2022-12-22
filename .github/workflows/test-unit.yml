@@ -60,7 +60,6 @@ jobs:
           package-manager: ${{ inputs.package-manager }}
 
       - name: Unit tests ${{ inputs.app-layer }}
-        id: client-unit-test
         run: ${{ inputs.package-manager }} test:unit:${{ inputs.app-layer }} --ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
