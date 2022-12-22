@@ -133,7 +133,7 @@ jobs:
                         type: "section",
                         text: {
                             type: "mrkdwn",
-                            text: status_icon_func(workflow_status) + " *${{ github.workflow }}* " + "\nWorkflow run <" + wf_run.data.html_url + "|#${{ github.run_number }}> completed in " + date_diff_func(new Date(wf_run.data.created_at), new Date(wf_run.data.updated_at))
+                            text: status_icon_func(workflow_status) + " *${{ github.workflow }}* " + "\nWorkflow run <" + wf_run.data.html_url + "|#${{ github.run_number }}>
                         }
                     },
                     {
