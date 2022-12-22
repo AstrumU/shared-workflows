@@ -66,9 +66,9 @@ jobs:
                 case "w_cancelled":
                     return ":warning:"
                 case "success":
-                    return "\u2713"
+                    return "\u2705"
                 case "failure":
-                    return "\u2717"
+                    return "\274C"
                 default:
                     return "\u20e0"
                 }
@@ -132,7 +132,7 @@ jobs:
                         type: "section",
                         text: {
                             type: "mrkdwn",
-                            text: "<https://github.com/${{ github.repository }}|*${{ github.repository }}*>\nfrom *${{ github.ref }}*"
+                            text: "<https://github.com/${{ github.repository }}|*${{ github.repository }}*>\nbranch <https://github.com/${{ github.ref }}|*${{ github.ref }}"
                         }
                     },
                     {
