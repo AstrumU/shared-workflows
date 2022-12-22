@@ -132,7 +132,7 @@ jobs:
                         type: "section",
                         text: {
                             type: "mrkdwn",
-                            text: "<https://github.com/${{ github.repository }}|*${{ github.repository }}*>\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                            text: "<https://github.com/${{ github.repository }}|*${{ github.repository }}*>"
                         }
                     },
                     {
@@ -161,8 +161,3 @@ jobs:
           payload: ${{ steps.status.outputs.result }}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-
-      # - name: Send to Slack
-      #   if: success()
-      #   run: |
-      #     curl -X POST ${{ secrets.SLACK_NOTIFY_WEBHOOK_URL }} -H "Content-type: application/json" --data '${{ steps.status.outputs.result }}'
