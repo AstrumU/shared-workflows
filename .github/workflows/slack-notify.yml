@@ -68,7 +68,7 @@ jobs:
                 case "success":
                     return "\u2705"
                 case "failure":
-                    return "\274C"
+                    return "\u274C"
                 default:
                     return "\u20e0"
                 }
@@ -132,7 +132,7 @@ jobs:
                         type: "section",
                         text: {
                             type: "mrkdwn",
-                            text: "<https://github.com/${{ github.repository }}|*${{ github.repository }}*>\nbranch <https://github.com/${{ github.ref }}|*${{ github.ref }}"
+                            text: "<https://github.com/${{ github.repository }}|*${{ github.repository }}*>\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                         }
                     },
                     {
