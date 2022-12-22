@@ -34,26 +34,6 @@ jobs:
             // build slack notification message
             ////////////////////////////////////
             // some utility functions
-            var date_diff_func = function(start, end) {
-                var duration = end - start
-                // format the duration
-                var delta = duration / 1000
-                var days = Math.floor(delta / 86400)
-                delta -= days * 86400
-                var hours = Math.floor(delta / 3600) % 24
-                delta -= hours * 3600
-                var minutes = Math.floor(delta / 60) % 60
-                delta -= minutes * 60
-                var seconds = Math.floor(delta % 60)
-                var format_func = function(v, text, check) {
-                    if (v <= 0 && check) {
-                        return ""
-                    } else {
-                        return v + text
-                    }
-                }
-                return format_func(days, "d", true) + format_func(hours, "h", true) + format_func(minutes, "m", true) + format_func(seconds, "s", false)
-            }
             var status_icon_func = function(s) {
                 switch (s) {
                 case "w_success":
