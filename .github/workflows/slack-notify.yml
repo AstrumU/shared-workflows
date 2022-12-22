@@ -4,7 +4,7 @@ on:
       chanel-id:
         type: string
         required: false
-        default: "chanel-for-test-notify"
+        default: "ci_cd"
     secrets:
       SLACK_BOT_TOKEN:
         required: false
