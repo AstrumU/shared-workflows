@@ -1,0 +1,85 @@
+name: "Changeset release"
+description: "Release using changeset"
+inputs:
+  node-version-file:
+    description: "File containing the version Spec of the version to use"
+    required: false
+    default: ".nvmrc"
+  package-manager:
+    description: "Package manager"
+    required: false
+    default: yarn
+  pnpm-version:
+    description: "PNPM manager version"
+    required: false
+    default: "7"
+  cache-version:
+    description: "Cache version"
+    required: false
+    default: v1
+  lock-file:
+    description: "Lockfile name"
+    required: true
+    default: yarn.lock
+  git-identity:
+    description: "Git Identity"
+    required: true
+    default: "true"
+
+outputs:
+  cache-hit:
+    description: "A boolean value to indicate an exact match was found for the primary key"
+    value: ${{ steps.cache.outputs.cache-hit }}
+
+runs:
+  using: composite
+  steps:
+    - name: Setup env
+      uses: AstrumU/shared-workflows/.github/actions/setup@main
+      with:
+        node-version-file: ${{ inputs.node-version-file }}
+        package-manager: ${{ inputs.package-manager }}
+        pnpm-version: ${{ inputs.pnpm-version }}
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+        NODE_OPTIONS: ${{ inputs.node-options }}
+
+    - name: Cache dependencies
+      uses: AstrumU/shared-workflows/.github/actions/cache-dependencies@main
+      id: cache-dependencies
+      with:
+        package-manager: ${{ inputs.package-manager }}
+        cache-version: ${{ inputs.cache-version }}
+        lock-file: ${{ inputs.lock-file }}
+
+    - name: Dependencies
+      if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
+      shell: bash
+      run: ${{ inputs.package-manager }} install ${{ inputs.args }}
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+        NODE_OPTIONS: ${{ inputs.node-options }}
+
+    - name: Git Identity
+      if: inputs.git-identity == 'true'
+      shell: bash
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+
+    - name: set date variables
+      id: date
+      shell: bash
+      run: echo "date=$(date +"%B %d, %Y")" >> $GITHUB_OUTPUT
+
+    - name: Create release Pull Request or publish to NPM
+      id: changesets
+      uses: dotansimha/changesets-action@v1.3.3
+      with:
+        createGithubReleases: aggregate
+        publish: yarn release
+        commit: "ci(changesets): version packages"
+        githubReleaseName: ${{ steps.date.outputs.date }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.PUSH_GITHUB }}
+        NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
