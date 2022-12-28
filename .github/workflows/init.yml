@@ -30,7 +30,6 @@ jobs:
       cache-version: ${{ steps.cache-version.outputs.cache-version }}
       lock-file: ${{ steps.lock-file.outputs.lock-file }}
     steps:
-
       - name: "Init package manager"
         id: package-manager
         run: echo "package-manager=${{ inputs.package-manager }}" >> $GITHUB_OUTPUT
