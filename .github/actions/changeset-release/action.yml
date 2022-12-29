@@ -25,6 +25,10 @@ inputs:
     description: "Git Identity"
     required: true
     default: "true"
+  node-options:
+    description: "Node options"
+    required: false
+    default: "--max_old_space_size=8192"
 
 runs:
   using: composite
@@ -72,7 +76,7 @@ runs:
       uses: dotansimha/changesets-action@v1.3.3
       with:
         createGithubReleases: aggregate
-        publish: yarn release
+        publish: ${{ inputs.package-manager }} release
         commit: "ci(changesets): version packages"
         githubReleaseName: ${{ steps.date.outputs.date }}
       env:
