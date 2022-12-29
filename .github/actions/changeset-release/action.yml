@@ -75,14 +75,14 @@ runs:
       shell: bash
       run: echo "date=$(date +"%B %d, %Y")" >> $GITHUB_OUTPUT
 
-    - name: Create release Pull Request or publish to NPM
-      id: changesets
-      uses: dotansimha/changesets-action@v1.3.3
-      with:
-        createGithubReleases: aggregate
-        publish: ${{ inputs.package-manager }} release
-        commit: "ci(changesets): version packages"
-        githubReleaseName: ${{ steps.date.outputs.date }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.PUSH_GITHUB }}
-        NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+    # - name: Create release Pull Request or publish to NPM
+    #   id: changesets
+    #   uses: dotansimha/changesets-action@v1.3.3
+    #   with:
+    #     createGithubReleases: aggregate
+    #     publish: ${{ inputs.package-manager }} release
+    #     commit: "ci(changesets): version packages"
+    #     githubReleaseName: ${{ steps.date.outputs.date }}
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.PUSH_GITHUB }}
+    #     NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
