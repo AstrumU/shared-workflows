@@ -1,63 +1,67 @@
 name: "Changeset release"
 description: "Release using changeset"
 inputs:
-  node-version-file:
-    description: "File containing the version Spec of the version to use"
-    required: false
-    default: ".nvmrc"
+  # node-version-file:
+  #   description: "File containing the version Spec of the version to use"
+  #   required: false
+  #   default: ".nvmrc"
   package-manager:
     description: "Package manager"
     required: false
     default: yarn
-  pnpm-version:
-    description: "PNPM manager version"
-    required: false
-    default: "7"
-  cache-version:
-    description: "Cache version"
-    required: false
-    default: v1
-  lock-file:
-    description: "Lockfile name"
-    required: true
-    default: yarn.lock
+  # pnpm-version:
+  #   description: "PNPM manager version"
+  #   required: false
+  #   default: "7"
+  # cache-version:
+  #   description: "Cache version"
+  #   required: false
+  #   default: v1
+  # lock-file:
+  #   description: "Lockfile name"
+  #   required: true
+  #   default: yarn.lock
   git-identity:
     description: "Git Identity"
     required: true
     default: "true"
-  node-options:
-    description: "Node options"
-    required: false
-    default: "--max_old_space_size=8192"
+  # node-options:
+  #   description: "Node options"
+  #   required: false
+  #   default: "--max_old_space_size=8192"
+  # args:
+  #   description: Additional flags to pass to the install command.
+  #   default: "--frozen-lockfile"
+  #   required: false
 
 runs:
   using: composite
   steps:
-    - name: Setup env
-      uses: AstrumU/shared-workflows/.github/actions/setup@main
-      with:
-        node-version-file: ${{ inputs.node-version-file }}
-        package-manager: ${{ inputs.package-manager }}
-        pnpm-version: ${{ inputs.pnpm-version }}
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-        NODE_OPTIONS: ${{ inputs.node-options }}
+    # - name: Setup env
+    #   uses: AstrumU/shared-workflows/.github/actions/setup@main
+    #   with:
+    #     node-version-file: ${{ inputs.node-version-file }}
+    #     package-manager: ${{ inputs.package-manager }}
+    #     pnpm-version: ${{ inputs.pnpm-version }}
+    #   env:
+    #     NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+    #     NODE_OPTIONS: ${{ inputs.node-options }}
 
-    - name: Cache dependencies
-      uses: AstrumU/shared-workflows/.github/actions/cache-dependencies@main
-      id: cache-dependencies
-      with:
-        package-manager: ${{ inputs.package-manager }}
-        cache-version: ${{ inputs.cache-version }}
-        lock-file: ${{ inputs.lock-file }}
+    # - name: Cache dependencies
+    #   uses: AstrumU/shared-workflows/.github/actions/cache-dependencies@main
+    #   id: cache-dependencies
+    #   with:
+    #     package-manager: ${{ inputs.package-manager }}
+    #     cache-version: ${{ inputs.cache-version }}
+    #     lock-file: ${{ inputs.lock-file }}
 
-    - name: Dependencies
-      if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
-      shell: bash
-      run: ${{ inputs.package-manager }} install ${{ inputs.args }}
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-        NODE_OPTIONS: ${{ inputs.node-options }}
+    # - name: Dependencies
+    #   if: ${{ steps.cache-dependencies.outputs.cache-hit != 'true' }}
+    #   shell: bash
+    #   run: ${{ inputs.package-manager }} install ${{ inputs.args }}
+    #   env:
+    #     NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+    #     NODE_OPTIONS: ${{ inputs.node-options }}
 
     - name: Git Identity
       if: inputs.git-identity == 'true'
