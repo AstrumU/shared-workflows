@@ -23,7 +23,7 @@ runs:
     - name: set date variables
       id: date
       shell: bash
-      run: echo "date=$(date +"%B %d, %Y")" >> $GITHUB_OUTPUT
+      run: echo "date=$(date +"%B %d, %Y, %T")" >> $GITHUB_OUTPUT
 
     - name: Create release Pull Request or publish to NPM
       id: changesets
