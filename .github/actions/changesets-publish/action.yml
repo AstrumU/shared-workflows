@@ -32,4 +32,4 @@ runs:
         createGithubReleases: aggregate
         publish: ${{ inputs.package-manager }} release
         commit: "ci(changesets): version packages"
-        githubReleaseName: ${{ steps.date.outputs.date }}
+        githubReleaseName: Release ${{ steps.date.outputs.date }}
