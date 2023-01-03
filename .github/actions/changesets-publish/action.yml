@@ -30,7 +30,6 @@ runs:
       uses: dotansimha/changesets-action@v1.3.3
       with:
         createGithubReleases: aggregate
-        # publish: ${{ inputs.package-manager }} release
-        publish: yarn release
+        publish: ${{ inputs.package-manager }} release
         commit: "ci(changesets): version packages"
         githubReleaseName: Release ${{ steps.date.outputs.date }}
