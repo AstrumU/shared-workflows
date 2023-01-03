@@ -1,0 +1,35 @@
+name: "Changeset release"
+description: "Release using changeset"
+inputs:
+  package-manager:
+    description: "Package manager"
+    required: false
+    default: yarn
+  git-identity:
+    description: "Git Identity"
+    required: true
+    default: "true"
+
+runs:
+  using: composite
+  steps:
+    - name: Git Identity
+      if: inputs.git-identity == 'true'
+      shell: bash
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+
+    - name: set date variables
+      id: date
+      shell: bash
+      run: echo "date=$(date +"%B %d, %Y, %T")" >> $GITHUB_OUTPUT
+
+    - name: Create release Pull Request or publish to NPM
+      id: changesets
+      uses: dotansimha/changesets-action@v1.3.3
+      with:
+        createGithubReleases: aggregate
+        publish: ${{ inputs.package-manager }} release
+        commit: "ci(changesets): version packages"
+        githubReleaseName: Release ${{ steps.date.outputs.date }}
