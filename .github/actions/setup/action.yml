@@ -13,9 +13,7 @@ inputs:
     description: "PNPM manager version"
     required: false
     default: "7"
-  push-token:
-    description: "Github secret"
-    required: false
+
 
 runs:
   using: composite
@@ -25,7 +23,6 @@ runs:
       with:
         fetch-depth: 0
         ref: ${{ github.event.workflow_run.head_branch }}
-        token: ${{ inputs.push-token }}
 
     - name: Setup pnpm
       if: inputs.package-manager == 'pnpm'
