@@ -16,12 +16,21 @@ inputs:
   push-token:
     description: "Github secret"
     required: false
+    default: ""
 
 runs:
   using: composite
   steps:
     - name: Checkout
       uses: actions/checkout@v3
+      if: inputs.push-token == ''
+      with:
+        fetch-depth: 0
+        ref: ${{ github.event.workflow_run.head_branch }}
+
+    - name: Checkout With Token
+      uses: actions/checkout@v3
+      if: inputs.push-token != ''
       with:
         fetch-depth: 0
         ref: ${{ github.event.workflow_run.head_branch }}
