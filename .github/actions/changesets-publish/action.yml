@@ -27,7 +27,8 @@ runs:
 
     - name: Create release Pull Request or publish to NPM
       id: changesets
-      uses: dotansimha/changesets-action@v1.4.1
+      uses: changesets/action@v1
+      # uses: dotansimha/changesets-action@v1.4.1
       with:
         createGithubReleases: aggregate
         publish: ${{ inputs.package-manager }} release
